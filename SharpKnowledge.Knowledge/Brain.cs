@@ -1,4 +1,5 @@
-﻿using SharpKnowledge.Knowledge.Utility;
+﻿using SharpKnowledge.Knowledge.Math;
+using SharpKnowledge.Knowledge.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
