@@ -1,10 +1,11 @@
+using SharpKnowledge.Playing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpKnowledge.Games.Snake.Engine;
 
-public class SnakeGame
+public class SnakeGame : BaseGame
 {
     private readonly int _width;
     private readonly int _height;
@@ -22,7 +23,7 @@ public class SnakeGame
     public Position Food => _food;
     public Direction CurrentDirection => _currentDirection;
     public GameState GameState => _gameState;
-    public int Score => _score;
+    public long Score => _score;
     public float[,] Map => _map;
 
     public event EventHandler<int>? ScoreChanged;
@@ -48,17 +49,6 @@ public class SnakeGame
 
     private void InitializeGame()
     {
-        // Initialize snake in the center
-        _snake.Clear();
-        int centerX = _width / 2;
-        int centerY = _height / 2;
-        
-        _snake.Add(new Position(centerX, centerY));
-        _snake.Add(new Position(centerX - 1, centerY));
-        _snake.Add(new Position(centerX - 2, centerY));
-
-        GenerateFood();
-        UpdateMap();
     }
 
     public void SetDirection(Direction direction)
@@ -81,10 +71,20 @@ public class SnakeGame
                (direction1 == Direction.Right && direction2 == Direction.Left);
     }
 
-    public void Update()
+    public override bool Update(float takenDecision)
     {
         if (_gameState != GameState.Playing)
-            return;
+            return false;
+
+        // Map takenDecision (0 to 1) to Direction
+        if (takenDecision < 0.25f)
+            SetDirection(Direction.Up);
+        else if (takenDecision < 0.5f)
+            SetDirection(Direction.Down);
+        else if (takenDecision < 0.75f)
+            SetDirection(Direction.Left);
+        else
+            SetDirection(Direction.Right);
 
         // Calculate new head position
         Position head = _snake[0];
@@ -102,7 +102,7 @@ public class SnakeGame
         {
             _gameState = GameState.GameOver;
             GameStateChanged?.Invoke(this, _gameState);
-            return;
+            return false;
         }
 
         // Add new head
@@ -111,7 +111,7 @@ public class SnakeGame
         // Check if food was eaten
         if (newHead == _food)
         {
-            _score += 10;
+            _score += 1_000_000;
             ScoreChanged?.Invoke(this, _score);
             FoodEaten?.Invoke(this, EventArgs.Empty);
             GenerateFood();
@@ -123,6 +123,7 @@ public class SnakeGame
         }
 
         UpdateMap();
+        return true;
     }
 
     private void UpdateMap()
@@ -171,7 +172,7 @@ public class SnakeGame
 
     private bool IsWallCollision(Position position)
     {
-        return position.X < 0 || position.X >= _width || 
+        return position.X < 0 || position.X >= _width ||
                position.Y < 0 || position.Y >= _height;
     }
 
@@ -183,7 +184,7 @@ public class SnakeGame
     private void GenerateFood()
     {
         List<Position> availablePositions = new List<Position>();
-        
+
         for (int x = 0; x < _width; x++)
         {
             for (int y = 0; y < _height; y++)
@@ -212,9 +213,9 @@ public class SnakeGame
         _score = 0;
         _gameState = GameState.Playing;
         _currentDirection = Direction.Right;
-        
+
         InitializeGame();
-        
+
         ScoreChanged?.Invoke(this, _score);
         GameStateChanged?.Invoke(this, _gameState);
         UpdateMap();
@@ -241,17 +242,37 @@ public class SnakeGame
     public char GetCellContent(int x, int y)
     {
         Position pos = new Position(x, y);
-        
+
         if (pos == _food)
             return 'F';
-        
+
         if (_snake.Contains(pos))
         {
             if (_snake[0] == pos)
                 return 'H'; // Head
             return 'S'; // Snake body
         }
-        
+
         return ' '; // Empty space
+    }
+
+    public override void Initialize()
+    {
+        // Initialize snake in the center
+        _snake.Clear();
+        int centerX = _width / 2;
+        int centerY = _height / 2;
+
+        _snake.Add(new Position(centerX, centerY));
+        _snake.Add(new Position(centerX - 1, centerY));
+        _snake.Add(new Position(centerX - 2, centerY));
+
+        GenerateFood();
+        UpdateMap();
+    }
+
+    public override long GetScore()
+    {
+        return this.;
     }
 }
