@@ -1,4 +1,5 @@
-﻿using SharpKnowledge.Knowledge;
+﻿using SharpKnowledge.Common;
+using SharpKnowledge.Knowledge;
 using SharpKnowledge.Knowledge.Factories;
 using SharpKnowledge.Knowledge.IO;
 
@@ -20,9 +21,9 @@ namespace SharpKnowledge.Tester
             Brain brain = factory.GetBrain();
             brain.Generation = 10;
 
-            new IO().Save(brain, "Test", "data");
+            new IO().Save(brain, "Test", StaticVariables.DataPath);
 
-            var res = new IO().Load(10, "data").Brain;
+            var res = new IO().Load(10, StaticVariables.DataPath).Brain;
 
             Assert.That(res.Generation == 10);
 

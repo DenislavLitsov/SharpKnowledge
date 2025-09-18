@@ -1,3 +1,4 @@
+using SharpKnowledge.Common.RandomGenerators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,13 @@ public class SnakeGame
 {
     private readonly int _width;
     private readonly int _height;
-    private readonly Random _random;
+    private readonly IRandomGenerator _random;
     private readonly List<Position> _snake;
     private Position _food;
     private Direction _currentDirection;
     private GameState _gameState;
     private int _score;
+    private int _moves;
 
     public int Width => _width;
     public int Height => _height;
@@ -22,23 +24,25 @@ public class SnakeGame
     public Direction CurrentDirection => _currentDirection;
     public GameState GameState => _gameState;
     public int Score => _score;
+    public int Moves => _moves;
 
     public event EventHandler<int>? ScoreChanged;
     public event EventHandler<GameState>? GameStateChanged;
     public event EventHandler? FoodEaten;
 
-    public SnakeGame(int width, int height)
+    public SnakeGame(int width, int height, IRandomGenerator randomGenerator)
     {
         if (width < 5 || height < 5)
             throw new ArgumentException("Map size must be at least 5x5");
 
         _width = width;
         _height = height;
-        _random = new Random();
+        _random = randomGenerator;
         _snake = new List<Position>();
         _currentDirection = Direction.Right;
         _gameState = GameState.Playing;
         _score = 0;
+        _moves = 0;
 
         InitializeGame();
     }
@@ -81,6 +85,8 @@ public class SnakeGame
     {
         if (_gameState != GameState.Playing)
             return;
+
+        _moves++;
 
         // Calculate new head position
         Position head = _snake[0];
@@ -154,7 +160,11 @@ public class SnakeGame
             return;
         }
 
-        _food = availablePositions[_random.Next(availablePositions.Count)];
+        int index = (int)(_random.NextDouble() * availablePositions.Count);
+        if (index == availablePositions.Count)
+            index--;
+
+        _food = availablePositions[index];
     }
 
     public void Reset()

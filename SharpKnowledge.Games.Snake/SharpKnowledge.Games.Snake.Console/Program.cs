@@ -1,4 +1,5 @@
-﻿using SharpKnowledge.Games.Snake.Engine;
+﻿using SharpKnowledge.Common.RandomGenerators;
+using SharpKnowledge.Games.Snake.Engine;
 using System;
 using System.Threading;
 
@@ -41,7 +42,7 @@ class Program
             height = GetMapSize("Enter map height (minimum 5): ", 5, 100);
         }
 
-        _game = new SnakeGame(width, height);
+        _game = new SnakeGame(width, height, new RealRandom());
         
         // Subscribe to game events
         _game.ScoreChanged += (sender, score) => { /* Score updates handled in render loop */ };
