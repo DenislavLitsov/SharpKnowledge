@@ -99,6 +99,7 @@ public class SnakeGame : BaseGame
                 SetDirection(Direction.Right);
                 break;
             default:
+                throw new Exception();
                 // If index is out of range, do nothing or keep current direction
                 break;
         }

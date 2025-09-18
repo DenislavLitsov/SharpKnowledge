@@ -21,7 +21,7 @@ namespace SharpKnowledge.Tester
             Brain brain = factory.GetBrain();
             brain.Generation = 10;
 
-            new IO().Save(brain, "Test", StaticVariables.DataPath, "testGame");
+            new IO().Save(brain, 1, "Test", StaticVariables.DataPath, "testGame");
 
             var res = new IO().Load(10, StaticVariables.DataPath, "testGame").Brain;
 

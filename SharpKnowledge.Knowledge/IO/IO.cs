@@ -13,14 +13,14 @@ namespace SharpKnowledge.Knowledge.IO
         {
         }
 
-        public void Save(Brain brain, string description, string dataPath, string gameName)
+        public void Save(Brain brain, long totalRuns,string description, string dataPath, string gameName)
         {
             if (!Directory.Exists(Path.Combine(dataPath, gameName)))
             {
                 Directory.CreateDirectory(Path.Combine(dataPath, gameName));
             }
 
-            var saveModel = new SaveModel(brain, description);
+            var saveModel = new SaveModel(brain, description, totalRuns);
             var options = new System.Text.Json.JsonSerializerOptions
             {
                 WriteIndented = true,

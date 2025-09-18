@@ -18,6 +18,7 @@ namespace SharpKnowledge.Learning.BrainManagers
         public Brain[] EvolveBrain(Brain mainBrain, int newBrains, float mutationChance, float mutationMax)
         {
             Brain[] brains = new Brain[newBrains];
+
             for (int i = 0; i < newBrains; i++)
             {
                 brains[i] = GetEvolvedBrain(mainBrain, mutationChance, mutationMax);
@@ -48,6 +49,16 @@ namespace SharpKnowledge.Learning.BrainManagers
                         }
 
                         var newValue = prevValue + add;
+
+                        if (newValue > 10)
+                        {
+                            newValue = 10;
+                        }
+                        else if (newValue < -10)
+                        {
+                            newValue = -10;
+                        }
+
                         newBrain.biases.Set(row, col, newValue);
                     }
                 }
@@ -73,6 +84,21 @@ namespace SharpKnowledge.Learning.BrainManagers
                             }
 
                             var newValue = prevValue + add;
+
+                            if (prevValue == 0 && addOrRemove == 1)
+                            {
+                                newValue = (float)_random.NextDouble();
+                            }
+
+                            if (newValue > 1)
+                            {
+                                newValue = 1;
+                            }
+                            else if (newValue < 0)
+                            {
+                                newValue = 0;
+                            }
+
                             newBrain.weights.Set(row, col, k, newValue);
                         }
                     }

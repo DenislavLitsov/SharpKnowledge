@@ -35,7 +35,13 @@ namespace SharpKnowledge.Learning
                 threads[i].Join();
             }
 
+
             var bestBrain = this.students.OrderByDescending(s => s.Brain.BestScore).First().Brain;
+            if ((bestBrain.BestScore == 50 || bestBrain.BestScore == 51) && this.students.Any(x=>x.Brain.BestScore != 50 && x.Brain.BestScore != 51))
+            {
+                bestBrain = this.students.OrderByDescending(s => s.Brain.BestScore).First(x=> x.Brain.BestScore != 50 && x.Brain.BestScore != 51).Brain;
+            }
+
             return bestBrain;
         }
 

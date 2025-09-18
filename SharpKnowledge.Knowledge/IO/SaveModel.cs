@@ -10,10 +10,11 @@ namespace SharpKnowledge.Knowledge.IO
     [JsonSerializable(typeof(SaveModel))]
     public class SaveModel
     {
-        public SaveModel(Brain brain, string description)
+        public SaveModel(Brain brain, string description, long totalRuns)
         {
             Brain = brain;
             Description = description;
+            TotalRuns = totalRuns;
             Time = DateTime.UtcNow;
         }
 
@@ -22,5 +23,6 @@ namespace SharpKnowledge.Knowledge.IO
         public string Description { get; set; }
 
         public DateTime Time { get; set; }
+        public long TotalRuns { get; set; }
     }
 }
