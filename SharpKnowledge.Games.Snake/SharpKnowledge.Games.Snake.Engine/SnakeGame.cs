@@ -10,6 +10,7 @@ public class SnakeGame
     private readonly int _height;
     private readonly Random _random;
     private readonly List<Position> _snake;
+    private readonly float[,] _map;
     private Position _food;
     private Direction _currentDirection;
     private GameState _gameState;
@@ -22,6 +23,7 @@ public class SnakeGame
     public Direction CurrentDirection => _currentDirection;
     public GameState GameState => _gameState;
     public int Score => _score;
+    public float[,] Map => _map;
 
     public event EventHandler<int>? ScoreChanged;
     public event EventHandler<GameState>? GameStateChanged;
@@ -36,6 +38,7 @@ public class SnakeGame
         _height = height;
         _random = new Random();
         _snake = new List<Position>();
+        _map = new float[width, height];
         _currentDirection = Direction.Right;
         _gameState = GameState.Playing;
         _score = 0;
@@ -55,6 +58,7 @@ public class SnakeGame
         _snake.Add(new Position(centerX - 2, centerY));
 
         GenerateFood();
+        UpdateMap();
     }
 
     public void SetDirection(Direction direction)
@@ -117,6 +121,52 @@ public class SnakeGame
             // Remove tail if no food was eaten
             _snake.RemoveAt(_snake.Count - 1);
         }
+
+        UpdateMap();
+    }
+
+    private void UpdateMap()
+    {
+        // Clear the map first - set all positions to free space (0)
+        for (int x = 0; x < _width; x++)
+        {
+            for (int y = 0; y < _height; y++)
+            {
+                _map[x, y] = 0f; // Free space
+            }
+        }
+
+        // Set border positions as walls (0.1) - these represent the game boundaries
+        for (int x = 0; x < _width; x++)
+        {
+            _map[x, 0] = 0.1f; // Top border
+            _map[x, _height - 1] = 0.1f; // Bottom border
+        }
+        for (int y = 0; y < _height; y++)
+        {
+            _map[0, y] = 0.1f; // Left border
+            _map[_width - 1, y] = 0.1f; // Right border
+        }
+
+        // Set snake body positions to 0.5
+        for (int i = 1; i < _snake.Count; i++)
+        {
+            Position pos = _snake[i];
+            if (pos.X >= 0 && pos.X < _width && pos.Y >= 0 && pos.Y < _height)
+            {
+                _map[pos.X, pos.Y] = 0.5f; // Snake body
+            }
+        }
+
+        // Set snake head to 1
+        if (_snake.Count > 0)
+        {
+            Position head = _snake[0];
+            if (head.X >= 0 && head.X < _width && head.Y >= 0 && head.Y < _height)
+            {
+                _map[head.X, head.Y] = 1f; // Snake head
+            }
+        }
     }
 
     private bool IsWallCollision(Position position)
@@ -167,6 +217,7 @@ public class SnakeGame
         
         ScoreChanged?.Invoke(this, _score);
         GameStateChanged?.Invoke(this, _gameState);
+        UpdateMap();
     }
 
     public void Pause()
