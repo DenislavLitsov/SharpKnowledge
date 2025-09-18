@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\SharpKnowledge.Common\SharpKnowledge.Common.csproj" />
+    <ProjectReference Include="..\..\SharpKnowledge.Playing\SharpKnowledge.Playing.csproj" />
   </ItemGroup>
 
 </Project>

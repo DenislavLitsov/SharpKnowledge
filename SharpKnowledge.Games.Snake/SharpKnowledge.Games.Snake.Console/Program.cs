@@ -91,7 +91,7 @@ class Program
             {
                 if (_game!.GameState == GameState.Playing)
                 {
-                    _game.Update();
+                    //_game.Update();
                 }
             }
 

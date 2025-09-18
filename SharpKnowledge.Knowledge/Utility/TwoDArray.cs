@@ -22,6 +22,11 @@
             }
         }
 
+        public TwoDArray(float[][] array)
+        {
+            this.Array = array;
+        }
+
         public float Get(int row, int col)
         {
             return Array[col][row];

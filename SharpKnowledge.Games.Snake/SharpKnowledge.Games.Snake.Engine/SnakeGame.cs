@@ -16,8 +16,10 @@ public class SnakeGame : BaseGame
     private Position _food;
     private Direction _currentDirection;
     private GameState _gameState;
-    private int _score;
+    private long _score;
     private int _moves;
+    private Position _lastFoodPosition = new Position(-1, -1);
+    private int _totalWentThroughLastFood = 0;
 
     public int Width => _width;
     public int Height => _height;
@@ -25,12 +27,11 @@ public class SnakeGame : BaseGame
     public Position Food => _food;
     public Direction CurrentDirection => _currentDirection;
     public GameState GameState => _gameState;
-    public int Score => _score;
-    public int Moves => _moves;
     public long Score => _score;
+    public int Moves => _moves;
     public float[,] Map => _map;
 
-    public event EventHandler<int>? ScoreChanged;
+    public event EventHandler<long>? ScoreChanged;
     public event EventHandler<GameState>? GameStateChanged;
     public event EventHandler? FoodEaten;
 
@@ -121,12 +122,22 @@ public class SnakeGame : BaseGame
             _score += 1_000_000;
             ScoreChanged?.Invoke(this, _score);
             FoodEaten?.Invoke(this, EventArgs.Empty);
+            this._lastFoodPosition = new Position(_food.X, _food.Y);
+            _totalWentThroughLastFood = 0;
             GenerateFood();
         }
         else
         {
             // Remove tail if no food was eaten
             _snake.RemoveAt(_snake.Count - 1);
+            if (this._lastFoodPosition == _snake[0])
+            {
+                this._totalWentThroughLastFood++;
+                if (_totalWentThroughLastFood >= 3)
+                {
+                    return false;
+                }
+            }
         }
 
         UpdateMap();
@@ -140,20 +151,20 @@ public class SnakeGame : BaseGame
         {
             for (int y = 0; y < _height; y++)
             {
-                _map[x, y] = 0f; // Free space
+                _map[y, x] = 0f; // Free space
             }
         }
 
         // Set border positions as walls (0.1) - these represent the game boundaries
         for (int x = 0; x < _width; x++)
         {
-            _map[x, 0] = 0.1f; // Top border
-            _map[x, _height - 1] = 0.1f; // Bottom border
+            _map[0, x] = 0.1f; // Top border
+            _map[_height - 1, x] = 0.1f; // Bottom border
         }
         for (int y = 0; y < _height; y++)
         {
-            _map[0, y] = 0.1f; // Left border
-            _map[_width - 1, y] = 0.1f; // Right border
+            _map[y, 0] = 0.1f; // Left border
+            _map[y, _width - 1] = 0.1f; // Right border
         }
 
         // Set snake body positions to 0.5
@@ -162,7 +173,7 @@ public class SnakeGame : BaseGame
             Position pos = _snake[i];
             if (pos.X >= 0 && pos.X < _width && pos.Y >= 0 && pos.Y < _height)
             {
-                _map[pos.X, pos.Y] = 0.5f; // Snake body
+                _map[pos.Y, pos.X] = 0.5f; // Snake body
             }
         }
 
@@ -172,7 +183,7 @@ public class SnakeGame : BaseGame
             Position head = _snake[0];
             if (head.X >= 0 && head.X < _width && head.Y >= 0 && head.Y < _height)
             {
-                _map[head.X, head.Y] = 1f; // Snake head
+                _map[head.Y, head.X] = 1f; // Snake head
             }
         }
     }
@@ -282,8 +293,36 @@ public class SnakeGame : BaseGame
         UpdateMap();
     }
 
-    public override long GetScore()
+    public override float GetScore()
     {
-        return this.;
+        return this.Moves + this.Score;
+    }
+
+    public override float[] GetBrainInputs()
+    {
+        float headLocationX = _snake[0].X;
+        float headLocationY = _snake[0].Y;
+
+        float foodLocationX = _food.X;
+        float foodLocationY = _food.Y;
+
+        float[] inputs = new float[4 + this.Width * this.Height];
+
+        inputs[0] = headLocationX;
+        inputs[1] = headLocationY;
+        inputs[2] = foodLocationX;
+        inputs[3] = foodLocationY;
+
+        int index = 4;
+        for (int y = 0; y < this.Height; y++)
+        {
+            for (int x = 0; x < this.Width; x++)
+            {
+                inputs[index] = this.Map[y, x];
+                index++;
+            }
+        }
+
+        return inputs;
     }
 }

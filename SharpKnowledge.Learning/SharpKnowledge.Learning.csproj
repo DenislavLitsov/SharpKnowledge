@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SharpKnowledge.Games.Snake\SharpKnowledge.Games.Snake.Engine\SharpKnowledge.Games.Snake.Engine.csproj" />
+    <ProjectReference Include="..\SharpKnowledge.Knowledge\SharpKnowledge.Knowledge.csproj" />
+    <ProjectReference Include="..\SharpKnowledge.Playing\SharpKnowledge.Playing.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -13,11 +13,11 @@ namespace SharpKnowledge.Knowledge.IO
         {
         }
 
-        public void Save(Brain brain, string description, string dataPath)
+        public void Save(Brain brain, string description, string dataPath, string gameName)
         {
-            if (!Directory.Exists(dataPath))
+            if (!Directory.Exists(Path.Combine(dataPath, gameName)))
             {
-                Directory.CreateDirectory(dataPath);
+                Directory.CreateDirectory(Path.Combine(dataPath, gameName));
             }
 
             var saveModel = new SaveModel(brain, description);
@@ -29,15 +29,15 @@ namespace SharpKnowledge.Knowledge.IO
             string jsonString = System.Text.Json.JsonSerializer.Serialize(saveModel, options);
 
             string fileTitle = $"gen_{brain.Generation}.json";
-            string fullPath = Path.Combine(dataPath, fileTitle);
+            string fullPath = Path.Combine(Path.Combine(dataPath, gameName), fileTitle);
 
             System.IO.File.WriteAllText(fullPath, jsonString);
         }
 
-        public SaveModel Load(int generation, string dataPath)
+        public SaveModel Load(int generation, string dataPath, string gameName)
         {
             string fileTitle = $"gen_{generation}.json";
-            string fullPath = Path.Combine(dataPath, fileTitle);
+            string fullPath = Path.Combine(Path.Combine(dataPath, gameName), fileTitle);
 
             if (!System.IO.File.Exists(fullPath))
             {
@@ -56,14 +56,25 @@ namespace SharpKnowledge.Knowledge.IO
             return saveModel;
         }
 
-        public int[] GetAllSavedGenerations(string dataPath)
+        public SaveModel LoadLatest(string dataPath, string gameName)
         {
-            if (!Directory.Exists(dataPath) || Directory.GetFiles(dataPath).Length == 0)
+            if (!Directory.Exists(Path.Combine(dataPath, gameName)) || Directory.GetFiles(Path.Combine(dataPath, gameName)).Length == 0)
+            {
+                return null;
+            }
+            var allGens = GetAllSavedGenerations(dataPath, gameName);
+            int latestGen = allGens.Max();
+            return Load(latestGen, dataPath, gameName);
+        }
+
+        public int[] GetAllSavedGenerations(string dataPath, string gameName)
+        {
+            if (!Directory.Exists(Path.Combine(dataPath, gameName)) || Directory.GetFiles(Path.Combine(dataPath, gameName)).Length == 0)
             {
                 return [];
             }
 
-            var allGens = Directory.GetFiles(dataPath)
+            var allGens = Directory.GetFiles(Path.Combine(dataPath, gameName))
                 .Select(x => x.Replace("gen_", ""))
                 .Select(x => x.Replace(".json", ""))
                 .Select(x=>int.Parse(x))

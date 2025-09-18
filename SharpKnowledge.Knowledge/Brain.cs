@@ -19,6 +19,8 @@ namespace SharpKnowledge.Knowledge
 
         public int Generation;
 
+        public float BestScore = 0;
+
         public Brain(ThreeDArray weights, TwoDArray biases, int generation = 0)
         {
             this.weights = weights;
@@ -64,6 +66,31 @@ namespace SharpKnowledge.Knowledge
 
             float[] result = this.nodes.GetLastCol();
             return result;
+        }
+
+        public Brain Clone()
+        {
+            float[][][] newWeightsArray = new float[this.weights.Array.Length][][];
+            for (int col = 0; col < this.weights.Array.Length; col++)
+            {
+                newWeightsArray[col] = new float[this.weights.Array[col].Length][];
+                for (int row = 0; row < this.weights.Array[col].Length; row++)
+                {
+                        newWeightsArray[col][row] = new float[this.weights.Array[col][row].Length];
+                        Array.Copy(this.weights.Array[col][row], newWeightsArray[col][row], this.weights.Array[col][row].Length);
+                    
+                }
+            }
+            ThreeDArray newWeights = new ThreeDArray(newWeightsArray);
+            float[][] newBiasesArray = new float[this.biases.Array.Length][];
+            for (int col = 0; col < this.biases.Array.Length; col++)
+            {
+                newBiasesArray[col] = new float[this.biases.Array[col].Length];
+                Array.Copy(this.biases.Array[col], newBiasesArray[col], this.biases.Array[col].Length);
+            }
+            TwoDArray newBiases = new TwoDArray(newBiasesArray);
+            Brain newBrain = new Brain(newWeights, newBiases, this.Generation);
+            return newBrain;
         }
 
         private void SetInputs(float[] inputs)
