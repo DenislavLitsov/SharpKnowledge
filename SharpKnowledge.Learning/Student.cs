@@ -30,15 +30,18 @@ namespace SharpKnowledge.Learning
         {
             this.baseGame.Initialize();
             bool isGameOver = false;
+            int totalUpdates = 0;
             while (!isGameOver)
             {
                 float[] inputs = this.baseGame.GetBrainInputs();
                 float[] outputs = this.brain.CalculateOutputs(inputs);
                 float decision = outputs[0]; // Assuming single output for decision making
                 isGameOver = !this.baseGame.Update(decision);
+                totalUpdates++;
             }
 
             this.brain.BestScore = this.baseGame.GetScore();
+            Console.WriteLine(totalUpdates);
         }
     }
 }

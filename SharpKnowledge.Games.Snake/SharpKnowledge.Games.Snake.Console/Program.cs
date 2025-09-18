@@ -1,5 +1,7 @@
 ﻿using SharpKnowledge.Common.RandomGenerators;
 using SharpKnowledge.Games.Snake.Engine;
+using SharpKnowledge.Knowledge;
+using SharpKnowledge.Knowledge.Factories;
 using System;
 using System.Threading;
 
@@ -13,55 +15,14 @@ class Program
 
     static void Main(string[] args)
     {
-        System.Console.WriteLine("Welcome to Snake Game!");
-        System.Console.WriteLine("Use WASD or Arrow Keys to move, ESC to quit, R to restart, P to pause/resume");
-        
-        // Check if console input is available
-        if (!System.Console.IsInputRedirected)
-        {
-            System.Console.WriteLine("Press any key to start...");
-            System.Console.ReadKey();
-        }
-        else
-        {
-            System.Console.WriteLine("Running in test mode...");
-            Thread.Sleep(1000);
-        }
+        _game = new SnakeGame(100, 100, new RandomGeneratorFactory(true, 10_000).GetRandomGenerator());
+        _game.Initialize();
 
-        // Get map size from user or use defaults for testing
-        int width, height;
-        if (System.Console.IsInputRedirected)
-        {
-            width = 15;
-            height = 10;
-            System.Console.WriteLine($"Using default map size: {width}x{height}");
-        }
-        else
-        {
-            width = GetMapSize("Enter map width (minimum 5): ", 5, 100);
-            height = GetMapSize("Enter map height (minimum 5): ", 5, 100);
-        }
+        int[] columnsWithRows = { 10_020, 1000, 100, 50, 4, 1 };
+        var factory = new RandomBrainFactory(columnsWithRows);
+        Brain mainBrain = factory.GetBrain();
 
-        _game = new SnakeGame(width, height, new RealRandom());
-        
-        // Subscribe to game events
-        _game.ScoreChanged += (sender, score) => { /* Score updates handled in render loop */ };
-        _game.GameStateChanged += (sender, state) => { /* State changes handled in game loop */ };
-
-        System.Console.CursorVisible = false;
-        System.Console.Clear();
-
-        // Start input handling thread
-        Thread inputThread = new Thread(HandleInput);
-        inputThread.Start();
-
-        // Main game loop
-        GameLoop();
-
-        inputThread.Join();
-        System.Console.CursorVisible = true;
-        System.Console.Clear();
-        System.Console.WriteLine("Thanks for playing Snake!");
+        GameLoop(mainBrain);
     }
 
     private static int GetMapSize(string prompt, int min, int max)
@@ -79,7 +40,7 @@ class Program
         } while (true);
     }
 
-    private static void GameLoop()
+    private static void GameLoop(Brain mainBrain)
     {
         const int frameDelay = 1000;
         int frameCount = 0;
@@ -91,7 +52,9 @@ class Program
             {
                 if (_game!.GameState == GameState.Playing)
                 {
-                    //_game.Update();
+                    _game.GetBrainInputs();
+                    var outPut = mainBrain.CalculateOutputs(_game.GetBrainInputs());
+                    _game.Update(outPut[0]);
                 }
             }
 

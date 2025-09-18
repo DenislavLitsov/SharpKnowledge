@@ -52,7 +52,7 @@ namespace SharpKnowledge.Learning.BrainManagers
                     }
                 }
             }
-            for (int col = 0; col < newBrain.weights.Array.Length; col++)
+            for (int col = 0; col < newBrain.weights.Array.Length - 1; col++)
             {
                 for (int row = 0; row < newBrain.weights.Array[col].Length; row++)
                 {

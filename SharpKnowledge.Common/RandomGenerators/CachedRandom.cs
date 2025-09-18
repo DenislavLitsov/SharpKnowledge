@@ -8,6 +8,12 @@
         public CachedRandom(int totalCachedNumbers)
         {
             var filePath = Path.Combine(StaticVariables.DataPath, "randoms", $"cachedRandoms_{totalCachedNumbers}.txt");
+            
+            if (!Directory.Exists(Path.Combine(StaticVariables.DataPath, "randoms")))
+            {
+                Directory.CreateDirectory(Path.Combine(StaticVariables.DataPath, "randoms"));
+            }
+
             if (File.Exists(filePath))
             {
                 double[] doubles = File

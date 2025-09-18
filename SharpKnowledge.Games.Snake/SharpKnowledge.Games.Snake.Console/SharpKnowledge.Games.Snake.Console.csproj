@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpKnowledge.Knowledge\SharpKnowledge.Knowledge.csproj" />
     <ProjectReference Include="..\SharpKnowledge.Games.Snake.Engine\SharpKnowledge.Games.Snake.Engine.csproj" />
   </ItemGroup>
 
