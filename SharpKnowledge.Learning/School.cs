@@ -28,7 +28,7 @@ namespace SharpKnowledge.Learning
             Brain mainBrain;
             if (latestModel == null)
             {
-                int[] columnsWithRows = { 10_020, 1000, 100, 50, 4, 1 };
+                int[] columnsWithRows = { 10_020, 1000, 100, 50, 4 };
                 var factory = new RandomBrainFactory(columnsWithRows);
                 mainBrain = factory.GetBrain();
             }
@@ -42,7 +42,7 @@ namespace SharpKnowledge.Learning
             {
                 var brains = brainEvolutioner.EvolveBrain(mainBrain, 10, 0.1f, 0.5f);
                 Brain bestBrain = teacher.Teach(brains);
-                if (mainBrain.BestScore < bestBrain.BestScore)
+                if (mainBrain.BestScore < bestBrain.BestScore && bestBrain.BestScore != 50 && bestBrain.BestScore != 51 && bestBrain.BestScore != 1)
                 {
                     mainBrain = bestBrain;
                     Console.WriteLine($"Best score: {mainBrain.BestScore}, Generation: {mainBrain.Generation}");
@@ -54,7 +54,7 @@ namespace SharpKnowledge.Learning
                 }
 
                 totalRuns++;
-                Console.WriteLine(totalRuns);
+                Console.WriteLine($"Total runs: {totalRuns}");
             }
         }
     }

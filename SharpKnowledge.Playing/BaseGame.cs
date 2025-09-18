@@ -13,7 +13,7 @@
         /// </summary>
         /// <param name="takenDecision"></param>
         /// <returns></returns>
-        public abstract bool Update(float takenDecision);
+        public abstract bool Update(float[] takenDecisions);
 
         public abstract float GetScore();
 

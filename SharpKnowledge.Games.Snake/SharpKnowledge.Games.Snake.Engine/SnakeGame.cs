@@ -18,8 +18,7 @@ public class SnakeGame : BaseGame
     private GameState _gameState;
     private long _score;
     private int _moves;
-    private Position _lastFoodPosition = new Position(-1, -1);
-    private int _totalWentThroughLastFood = 0;
+    private int _totalMovesSenseLastEat = 0;
 
     public int Width => _width;
     public int Height => _height;
@@ -77,20 +76,32 @@ public class SnakeGame : BaseGame
                (direction1 == Direction.Right && direction2 == Direction.Left);
     }
 
-    public override bool Update(float takenDecision)
+    public override bool Update(float[] takenDecisions)
     {
         if (_gameState != GameState.Playing)
             return false;
 
         // Map takenDecision (0 to 1) to Direction
-        if (takenDecision < 0.25f)
-            SetDirection(Direction.Up);
-        else if (takenDecision < 0.5f)
-            SetDirection(Direction.Down);
-        else if (takenDecision < 0.75f)
-            SetDirection(Direction.Left);
-        else
-            SetDirection(Direction.Right);
+        int index = Array.IndexOf(takenDecisions, takenDecisions.Max());
+
+        switch (index)
+        {
+            case 0:
+                SetDirection(Direction.Up);
+                break;
+            case 1:
+                SetDirection(Direction.Down);
+                break;
+            case 2:
+                SetDirection(Direction.Left);
+                break;
+            case 3:
+                SetDirection(Direction.Right);
+                break;
+            default:
+                // If index is out of range, do nothing or keep current direction
+                break;
+        }
 
         _moves++;
 
@@ -122,21 +133,18 @@ public class SnakeGame : BaseGame
             _score += 1_000_000;
             ScoreChanged?.Invoke(this, _score);
             FoodEaten?.Invoke(this, EventArgs.Empty);
-            this._lastFoodPosition = new Position(_food.X, _food.Y);
-            _totalWentThroughLastFood = 0;
+            _totalMovesSenseLastEat = 0;
             GenerateFood();
         }
         else
         {
             // Remove tail if no food was eaten
             _snake.RemoveAt(_snake.Count - 1);
-            if (this._lastFoodPosition == _snake[0])
+            this._totalMovesSenseLastEat++;
+            if (_totalMovesSenseLastEat >= 10_100)
             {
-                this._totalWentThroughLastFood++;
-                if (_totalWentThroughLastFood >= 3)
-                {
-                    return false;
-                }
+                this._score = int.MinValue;
+                return false;
             }
         }
 

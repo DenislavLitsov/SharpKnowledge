@@ -21,9 +21,9 @@ namespace SharpKnowledge.Tester
             Brain brain = factory.GetBrain();
             brain.Generation = 10;
 
-            new IO().Save(brain, "Test", StaticVariables.DataPath);
+            new IO().Save(brain, "Test", StaticVariables.DataPath, "testGame");
 
-            var res = new IO().Load(10, StaticVariables.DataPath).Brain;
+            var res = new IO().Load(10, StaticVariables.DataPath, "testGame").Brain;
 
             Assert.That(res.Generation == 10);
 

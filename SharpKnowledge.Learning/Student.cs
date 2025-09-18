@@ -35,8 +35,7 @@ namespace SharpKnowledge.Learning
             {
                 float[] inputs = this.baseGame.GetBrainInputs();
                 float[] outputs = this.brain.CalculateOutputs(inputs);
-                float decision = outputs[0]; // Assuming single output for decision making
-                isGameOver = !this.baseGame.Update(decision);
+                isGameOver = !this.baseGame.Update(outputs);
                 totalUpdates++;
             }
 

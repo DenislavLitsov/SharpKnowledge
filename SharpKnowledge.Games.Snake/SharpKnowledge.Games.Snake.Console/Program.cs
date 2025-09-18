@@ -18,7 +18,7 @@ class Program
         _game = new SnakeGame(100, 100, new RandomGeneratorFactory(true, 10_000).GetRandomGenerator());
         _game.Initialize();
 
-        int[] columnsWithRows = { 10_020, 1000, 100, 50, 4, 1 };
+        int[] columnsWithRows = { 10_020, 1000, 100, 50, 4 };
         var factory = new RandomBrainFactory(columnsWithRows);
         Brain mainBrain = factory.GetBrain();
 
@@ -54,7 +54,7 @@ class Program
                 {
                     _game.GetBrainInputs();
                     var outPut = mainBrain.CalculateOutputs(_game.GetBrainInputs());
-                    _game.Update(outPut[0]);
+                    _game.Update(outPut);
                 }
             }
 
@@ -126,11 +126,6 @@ class Program
             for (int i = 0; i < _game.Width; i++)
                 System.Console.Write("─");
             System.Console.WriteLine("┘");
-
-            // Render game info
-            System.Console.WriteLine($"Score: {_game.Score}");
-            System.Console.WriteLine($"State: {_game.GameState}");
-            System.Console.WriteLine("Controls: WASD/Arrows=Move, P=Pause, R=Restart, ESC=Quit");
         }
     }
 
