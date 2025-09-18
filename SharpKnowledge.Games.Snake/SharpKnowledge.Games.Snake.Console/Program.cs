@@ -37,8 +37,8 @@ class Program
         }
         else
         {
-            width = GetMapSize("Enter map width (minimum 5): ", 5, 50);
-            height = GetMapSize("Enter map height (minimum 5): ", 5, 50);
+            width = GetMapSize("Enter map width (minimum 5): ", 5, 100);
+            height = GetMapSize("Enter map height (minimum 5): ", 5, 100);
         }
 
         _game = new SnakeGame(width, height);
@@ -80,8 +80,7 @@ class Program
 
     private static void GameLoop()
     {
-        const int targetFps = 10; // Game updates per second
-        const int frameDelay = 1000 / targetFps;
+        const int frameDelay = 1000;
         int frameCount = 0;
         int maxFrames = System.Console.IsInputRedirected ? 50 : int.MaxValue; // Limit frames in test mode
 
@@ -115,6 +114,7 @@ class Program
 
     private static void RenderGame()
     {
+        System.Console.Clear();
         lock (_lockObject)
         {
             System.Console.SetCursorPosition(0, 0);

@@ -63,8 +63,8 @@ public class SnakeGame
             return;
 
         // Prevent the snake from moving backwards into itself
-        if (IsOppositeDirection(direction, _currentDirection))
-            return;
+        //if (IsOppositeDirection(direction, _currentDirection))
+        //    return;
 
         _currentDirection = direction;
     }
