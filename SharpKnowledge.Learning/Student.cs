@@ -40,7 +40,7 @@ namespace SharpKnowledge.Learning
             }
 
             this.brain.BestScore = this.baseGame.GetScore();
-            Console.WriteLine(totalUpdates);
+            //Console.WriteLine($"Best score: {this.brain.BestScore}, updates: {totalUpdates}");
         }
     }
 }

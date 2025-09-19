@@ -1,4 +1,5 @@
-﻿using SharpKnowledge.Knowledge.Math;
+﻿using SharpKnowledge.Common;
+using SharpKnowledge.Knowledge.Math;
 using SharpKnowledge.Knowledge.Utility;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,9 @@ namespace SharpKnowledge.Knowledge
                         calculatedValue += prevNodeValue * weight;
                     }
 
-                    this.nodes.Set(mainNodeRow, mainNodeCol, calculatedValue);
+                    float sigmoidedValue = QuickMaths.Sigmoid(calculatedValue);
+
+                    this.nodes.Set(mainNodeRow, mainNodeCol, sigmoidedValue);
                 }
             }
 

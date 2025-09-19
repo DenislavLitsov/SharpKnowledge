@@ -1,7 +1,9 @@
-﻿using SharpKnowledge.Common.RandomGenerators;
+﻿using SharpKnowledge.Common;
+using SharpKnowledge.Common.RandomGenerators;
 using SharpKnowledge.Games.Snake.Engine;
 using SharpKnowledge.Knowledge;
 using SharpKnowledge.Knowledge.Factories;
+using SharpKnowledge.Knowledge.IO;
 using System;
 using System.Threading;
 
@@ -15,14 +17,16 @@ class Program
 
     static void Main(string[] args)
     {
-        _game = new SnakeGame(100, 100, new RandomGeneratorFactory(true, 10_000).GetRandomGenerator());
+        _game = new SnakeGame(20, 20, new RandomGeneratorFactory(true, 10_000).GetRandomGenerator());
         _game.Initialize();
 
-        int[] columnsWithRows = { 10_020, 1000, 100, 50, 4 };
-        var factory = new RandomBrainFactory(columnsWithRows);
-        Brain mainBrain = factory.GetBrain();
+        //int[] columnsWithRows = { 400, 500, 100, 50, 4 };
+        //var factory = new RandomBrainFactory(columnsWithRows);
+        //Brain mainBrain = factory.GetBrain();
 
-        GameLoop(mainBrain);
+        var latestModel = new IO().LoadLatest(StaticVariables.DataPath, "Snake");
+
+        GameLoop(latestModel.Brain);
     }
 
     private static int GetMapSize(string prompt, int min, int max)

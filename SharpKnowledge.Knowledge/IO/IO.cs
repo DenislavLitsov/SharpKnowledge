@@ -75,6 +75,7 @@ namespace SharpKnowledge.Knowledge.IO
             }
 
             var allGens = Directory.GetFiles(Path.Combine(dataPath, gameName))
+                .Select(x=>Path.GetFileName(x))
                 .Select(x => x.Replace("gen_", ""))
                 .Select(x => x.Replace(".json", ""))
                 .Select(x=>int.Parse(x))

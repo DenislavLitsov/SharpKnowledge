@@ -1,6 +1,7 @@
 ﻿using SharpKnowledge.Knowledge;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,6 +59,15 @@ namespace SharpKnowledge.Learning.BrainManagers
                         {
                             newValue = -10;
                         }
+                        else if (prevValue == 0 && addOrRemove == 1)
+                        {
+                            newValue = (float)(1f * _random.NextDouble());
+                            addOrRemove = _random.Next(0, 2);
+                            if (addOrRemove == 0)
+                            {
+                                newValue = -newValue;
+                            }
+                        }
 
                         newBrain.biases.Set(row, col, newValue);
                     }
@@ -87,16 +97,24 @@ namespace SharpKnowledge.Learning.BrainManagers
 
                             if (prevValue == 0 && addOrRemove == 1)
                             {
-                                newValue = (float)_random.NextDouble();
+                                newValue = (float)(1f * _random.NextDouble()); 
+                                
+                                addOrRemove = _random.Next(0, 2);
+                                if (addOrRemove == 0)
+                                {
+                                    newValue = -newValue;
+                                }
+                                //newValue = 0.005f;
+                                //newValue = (float)_random.NextDouble();
                             }
 
                             if (newValue > 1)
                             {
                                 newValue = 1;
                             }
-                            else if (newValue < 0)
+                            else if (newValue < -1)
                             {
-                                newValue = 0;
+                                newValue = -1;
                             }
 
                             newBrain.weights.Set(row, col, k, newValue);

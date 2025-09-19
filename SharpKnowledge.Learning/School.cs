@@ -6,6 +6,7 @@ using SharpKnowledge.Knowledge.IO;
 using SharpKnowledge.Learning.BrainManagers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -23,15 +24,15 @@ namespace SharpKnowledge.Learning
 
         public void RunSnake()
         {
-            int totalThreads = 12;
+            int totalThreads = 100;
             long totalRuns = 0;
-            SnakeTeacher teacher = new SnakeTeacher(totalThreads, new RandomGeneratorFactory(true, 10000));
+            SnakeTeacher teacher = new SnakeTeacher(new RandomGeneratorFactory(true, 10000));
 
             var latestModel = new IO().LoadLatest(StaticVariables.DataPath, "Snake");
             Brain mainBrain;
             if (latestModel == null)
             {
-                int[] columnsWithRows = { 10_020, 1000, 100, 50, 4 };
+                int[] columnsWithRows = { 400, 500, 100, 50, 4 };
                 var factory = new RandomBrainFactory(columnsWithRows);
                 mainBrain = factory.GetBrain();
                 Console.WriteLine("Created random initial brain");
@@ -47,52 +48,80 @@ namespace SharpKnowledge.Learning
             float mutationStrength = 0.05f;
             long iterationsSenseLastBetterGeneration = 0;
 
+            var brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
+            Stopwatch stopwatch = new Stopwatch();
             while (true)
             {
+                stopwatch.Restart();
                 Console.WriteLine("New study");
 
-                if (iterationsSenseLastBetterGeneration < 100)
+                if (mainBrain.BestScore == 0 || mainBrain.BestScore == 1 || mainBrain.BestScore == 50 || mainBrain.BestScore == 51)
+                {
+                    mutationChance = 0.20f;
+                    mutationStrength = 1f;
+                    Console.WriteLine("Super strong mutation");
+                }
+                else if (iterationsSenseLastBetterGeneration < 10)
                 {
                     mutationChance = 0.1f;
                     mutationStrength = 0.05f;
                     Console.WriteLine("Weak mutation");
                 }
-                else if (iterationsSenseLastBetterGeneration < 1000)
+                else if (iterationsSenseLastBetterGeneration < 100)
                 {
                     mutationChance = 0.20f;
-                    mutationStrength = 0.20f;
+                    mutationStrength = 0.25f;
                     Console.WriteLine("Moderate mutation");
                 }
-                else if (iterationsSenseLastBetterGeneration < 10000)
+                else if (iterationsSenseLastBetterGeneration < 1000)
                 {
-                    mutationChance = 0.20f;
-                    mutationStrength = 0.50f;
+                    mutationChance = 0.30f;
+                    mutationStrength = 0.33f;
                     Console.WriteLine("Strong mutation");
                 }
+                else
+                {
+                    mutationChance = 0.50f;
+                    mutationStrength = 1f;
+                    Console.WriteLine("Super strong mutation");
+                }
 
-                var brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
-                Console.WriteLine("Evolved");
-                Console.WriteLine($"Iterations since last mutation: {iterationsSenseLastBetterGeneration}");
+                Console.WriteLine($"Start evolving brain with best {mainBrain.BestScore} generation: {mainBrain.Generation} iterations since last better: {iterationsSenseLastBetterGeneration}");
+                var threadedFunction = new ThreadedFunction<Brain[]>();
+                threadedFunction.Run(() =>
+                {
+                    var newBrains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
+                    return newBrains;
+                });
 
+                //brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
                 Brain bestBrain = teacher.Teach(brains);
+                var cachedNewBrains = threadedFunction.WaitResult();
+
                 iterationsSenseLastBetterGeneration++;
 
-                if ((mainBrain.BestScore < bestBrain.BestScore && bestBrain.BestScore != 50 && bestBrain.BestScore != 51) ||
-                    (mainBrain.BestScore == bestBrain.BestScore && totalRuns % 10 == 0))
+                if (mainBrain.BestScore < bestBrain.BestScore || 
+                    (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration % 100 == 0))
                 {
                     iterationsSenseLastBetterGeneration = 0;
                     mainBrain = bestBrain;
+                    brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
                     Console.WriteLine($"Best score: {mainBrain.BestScore}, Generation: {mainBrain.Generation}");
 
-                    if (mainBrain.Generation % 100 == 0)
+                    if (mainBrain.Generation % 1 == 0)
                     {
                         new IO().Save(mainBrain, totalRuns, $"Best brain with score {mainBrain.BestScore}", StaticVariables.DataPath, "Snake");
                         Console.WriteLine("Saved generation");
                     }
                 }
+                else
+                {
+                    brains = cachedNewBrains;
+                }
 
                 totalRuns++;
-                Console.WriteLine($"Total runs: {totalRuns}");
+                stopwatch.Stop();
+                Console.WriteLine($"Total runs: {totalRuns}. Last run lasted: {stopwatch.ElapsedMilliseconds}ms for total of {totalThreads} brains or {stopwatch.ElapsedMilliseconds/totalThreads}ms per brain");
             }
         }
     }

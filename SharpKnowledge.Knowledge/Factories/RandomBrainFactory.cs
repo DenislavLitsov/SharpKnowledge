@@ -36,7 +36,15 @@ namespace SharpKnowledge.Knowledge.Factories
             {
                 for (int row = 0; row < biases.Array[col].Length; row++)
                 {
-                    biases.Set(row, col, (float)(rnd.NextDouble() * 10));
+                    var bias = (float)(rnd.NextDouble() * 0.1);
+                    if ((int)(rnd.NextDouble() * 2) == 0)
+                    {
+                        bias = -bias;
+                    }
+
+                    bias = 0; // Start with zero biases
+
+                    biases.Set(row, col, bias);
                 }
             }
 
@@ -53,7 +61,8 @@ namespace SharpKnowledge.Knowledge.Factories
 
                     for (int depth = 0; depth < columnsWithRowsAndDepth[col][row].Length; depth++)
                     {
-                        weights.Set(row, col, depth, (float)rnd.NextDouble());
+                        //weights.Set(row, col, depth, (float)rnd.NextDouble() * 0.005f);
+                        weights.Set(row, col, depth, 0);
                     }
                 }
             }
