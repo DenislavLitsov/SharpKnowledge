@@ -4,13 +4,7 @@ using SharpKnowledge.Knowledge;
 using SharpKnowledge.Knowledge.Factories;
 using SharpKnowledge.Knowledge.IO;
 using SharpKnowledge.Learning.BrainManagers;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpKnowledge.Learning
 {
@@ -24,26 +18,25 @@ namespace SharpKnowledge.Learning
 
         public void RunSnake()
         {
-            GpuBrain.InitializeGpu();
-
             int totalThreads = 100;
+
             long totalRuns = 0;
             SnakeTeacher teacher = new SnakeTeacher(new RandomGeneratorFactory(true, 10000));
 
             var latestModel = new IO().LoadLatest(StaticVariables.DataPath, "Snake");
-            GpuBrain mainBrain;
-            if (true || latestModel == null)
+            Brain mainBrain;
+            if (latestModel == null)
             {
                 int[] columnsWithRows = { 400, 500, 100, 50, 4 };
                 var factory = new NullBrainFactory(columnsWithRows);
-                mainBrain = factory.GetGpuBrain();
+                mainBrain = factory.GetBrain();
                 Console.WriteLine("Created random initial brain");
             }
             else
             {
-                //mainBrain = latestModel.Brain;
-                //totalRuns = latestModel.TotalRuns;
-                //Console.WriteLine($"Loaded generation: {latestModel.Brain.Generation}, with description: {latestModel.Description}");
+                mainBrain = latestModel.Brain;
+                totalRuns = latestModel.TotalRuns;
+                Console.WriteLine($"Loaded generation: {latestModel.Brain.Generation}, with description: {latestModel.Description}");
             }
 
             float mutationChance = 0.1f;
@@ -96,7 +89,7 @@ namespace SharpKnowledge.Learning
                     return newBrains;
                 });
 
-                //brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
+                Console.WriteLine("Start teaching");
                 Brain bestBrain = teacher.Teach(brains);
                 Console.WriteLine("Finished teach");
                 var cachedNewBrains = threadedFunction.WaitResult();
@@ -107,10 +100,10 @@ namespace SharpKnowledge.Learning
                 iterationsSenseLastBetterGeneration++;
 
                 if (mainBrain.BestScore < bestBrain.BestScore || 
-                    (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration % 100 == 0))
+                    (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration > 1000))
                 {
                     iterationsSenseLastBetterGeneration = 0;
-                    mainBrain = (GpuBrain)bestBrain;
+                    mainBrain = bestBrain;
                     brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
                     Console.WriteLine($"Best score: {mainBrain.BestScore}, Generation: {mainBrain.Generation}");
 
@@ -127,6 +120,7 @@ namespace SharpKnowledge.Learning
                 totalRuns++;
                 stopwatch.Stop();
                 Console.WriteLine($"Total runs: {totalRuns}. Last run lasted: {stopwatch.ElapsedMilliseconds}ms for total of {totalThreads} brains or {stopwatch.ElapsedMilliseconds / totalThreads}ms per brain");
+                Console.WriteLine("--------");
             }
         }
     }

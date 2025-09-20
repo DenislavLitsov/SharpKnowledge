@@ -70,9 +70,9 @@ namespace SharpKnowledge.Knowledge
                     calculatedValue += prevNodeValue * weight;
                 }
 
-                //float sigmoidedValue = QuickMaths.Sigmoid(calculatedValue);
+                float sigmoidedValue = QuickMaths.Sigmoid(calculatedValue);
 
-                this.nodes.Set(mainNodeRow, mainNodeCol, calculatedValue);
+                this.nodes.Set(mainNodeRow, mainNodeCol, sigmoidedValue);
             }
         }
 

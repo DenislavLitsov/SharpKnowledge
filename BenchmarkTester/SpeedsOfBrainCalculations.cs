@@ -11,13 +11,13 @@ namespace BenchmarkTester
         [Test]
         public void CPUSpeedTest()
         {
-            int[] columnsWithRows = { 10_020, 1000, 1000, 50, 4 };
+            int[] columnsWithRows = { 400, 500, 100, 50, 4 };
             var factory = new NullBrainFactory(columnsWithRows);
             var brain = factory.GetBrain();
 
-            float[] input = new float[10_020];
+            float[] input = new float[columnsWithRows[0]];
             Random rnd = new Random();
-            for (int i = 0; i < 10_020; i++)
+            for (int i = 0; i < columnsWithRows[0]; i++)
             {
                 input[i] = (float)rnd.NextDouble();
             }
@@ -48,14 +48,19 @@ namespace BenchmarkTester
         [Test]
         public void GPUSpeedTest()
         {
-            GpuBrain.InitializeGpu();
-            int[] columnsWithRows = { 10_020, 1000, 1000, 50, 4 };
+            Stopwatch gpuTester = new Stopwatch();
+            gpuTester.Start();
+            //GpuBrain.InitializeGpu();
+            gpuTester.Stop();
+            Console.WriteLine($"GPU Initializa: {gpuTester.ElapsedMilliseconds}");
+
+            int[] columnsWithRows = { 400, 500, 100, 50, 4 };
             var factory = new NullBrainFactory(columnsWithRows);
             GpuBrain brain = factory.GetGpuBrain();
 
-            float[] input = new float[10_020];
+            float[] input = new float[columnsWithRows[0]];
             Random rnd = new Random();
-            for (int i = 0; i < 10_020; i++)
+            for (int i = 0; i < columnsWithRows[0]; i++)
             {
                 input[i] = (float)rnd.NextDouble();
             }

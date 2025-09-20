@@ -7,23 +7,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SharpKnowledge.Knowledge
 {
     public class GpuBrain : Brain
     {
-        private static Context context;
-        private static Accelerator accelerator;
+        [JsonIgnore]
+        public Context cudaContext;
+        [JsonIgnore]
+        public Accelerator cudaAccelerator;
 
-        public GpuBrain(ThreeDArray weights, TwoDArray biases, int generation = 0) : base(weights, biases, generation)
+        public GpuBrain(Context cudaContext, Accelerator cudaAccelerator, ThreeDArray weights, TwoDArray biases, int generation = 0) : base(weights, biases, generation)
         {
-        }
-
-        public static void InitializeGpu()
-        {
-            context = Context.CreateDefault();
-            accelerator = context.CreateCudaAccelerator(0);
+            this.cudaContext = cudaContext;
+            this.cudaAccelerator = cudaAccelerator;
         }
 
         protected override void CalculateColumn(int mainNodeCol)
@@ -35,18 +34,18 @@ namespace SharpKnowledge.Knowledge
             var colWeights = this.weights.Array[mainNodeCol - 1];
             var prevColNodes = this.nodes.Array[mainNodeCol - 1];
 
-            MemoryBuffer1D<float, Stride1D.Dense> biasesOnDevice = accelerator.Allocate1D(colBiases);
-            MemoryBuffer2D<float, Stride2D.DenseX> weightsOnDevice = accelerator.Allocate2DDenseX(colWeights);
-            MemoryBuffer1D<float, Stride1D.Dense> prevNodes = accelerator.Allocate1D(prevColNodes);
+            MemoryBuffer1D<float, Stride1D.Dense> biasesOnDevice = cudaAccelerator.Allocate1D(colBiases);
+            MemoryBuffer2D<float, Stride2D.DenseX> weightsOnDevice = cudaAccelerator.Allocate2DDenseX(colWeights);
+            MemoryBuffer1D<float, Stride1D.Dense> prevNodes = cudaAccelerator.Allocate1D(prevColNodes);
 
-            MemoryBuffer1D<float, Stride1D.Dense> deviceOutput = accelerator.Allocate1D<float>(mainNodeTotalRows);
+            MemoryBuffer1D<float, Stride1D.Dense> deviceOutput = cudaAccelerator.Allocate1D<float>(mainNodeTotalRows);
 
             int prevCol = mainNodeCol - 1;
             int prevTotalRows = this.biases.GetRows(prevCol);
 
             Action<Index1D, int, int, ArrayView1D<float, Stride1D.Dense>, ArrayView1D<float, Stride1D.Dense>,
                 ArrayView2D<float, Stride2D.DenseX>, ArrayView1D<float, Stride1D.Dense>> loadedCalcKernel =
-                    accelerator.LoadAutoGroupedStreamKernel<Index1D, int, int, ArrayView1D<float, Stride1D.Dense>,
+                    cudaAccelerator.LoadAutoGroupedStreamKernel<Index1D, int, int, ArrayView1D<float, Stride1D.Dense>,
                         ArrayView1D<float, Stride1D.Dense>, ArrayView2D<float, Stride2D.DenseX>, ArrayView1D<float, Stride1D.Dense>>(Kernel);
 
 
@@ -54,7 +53,7 @@ namespace SharpKnowledge.Knowledge
 
             // wait for the accelerator to be finished with whatever it's doing
             // in this case it just waits for the kernel to finish.
-            accelerator.Synchronize();
+            cudaAccelerator.Synchronize();
 
             float[] deviceReadOutputs = deviceOutput.GetAsArray1D();
             for (int i = 0; i < mainNodeTotalRows; i++)
@@ -105,7 +104,7 @@ namespace SharpKnowledge.Knowledge
                 Array.Copy(this.biases.Array[col], newBiasesArray[col], this.biases.Array[col].Length);
             }
             TwoDArray newBiases = new TwoDArray(newBiasesArray);
-            GpuBrain newBrain = new GpuBrain(newWeights, newBiases, this.Generation);
+            GpuBrain newBrain = new GpuBrain(cudaContext, cudaAccelerator, newWeights, newBiases, this.Generation);
             return newBrain;
         }
     }

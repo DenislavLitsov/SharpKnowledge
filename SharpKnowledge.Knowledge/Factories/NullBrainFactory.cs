@@ -1,4 +1,7 @@
-﻿using SharpKnowledge.Knowledge.Utility;
+﻿using ILGPU;
+using ILGPU.Runtime;
+using ILGPU.Runtime.Cuda;
+using SharpKnowledge.Knowledge.Utility;
 
 namespace SharpKnowledge.Knowledge.Factories
 {
@@ -78,7 +81,9 @@ namespace SharpKnowledge.Knowledge.Factories
 
             ThreeDArray weights = new ThreeDArray(columnsWithRowsAndDepth);
 
-            var brain = new GpuBrain(weights, biases);
+            var context = Context.CreateDefault();
+            var accelerator = context.CreateCudaAccelerator(0);
+            var brain = new GpuBrain(context, accelerator, weights, biases);
             return brain;
         }
     }

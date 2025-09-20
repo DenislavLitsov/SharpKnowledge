@@ -70,7 +70,7 @@ namespace SharpKnowledge.Tester
         {
             int[] columnsWithRows = { 2, 3, 1 };
             var factory = new NullBrainFactory(columnsWithRows);
-            GpuBrain.InitializeGpu();
+            //GpuBrain.InitializeGpu();
             GpuBrain mainBrain = factory.GetGpuBrain();
             mainBrain.biases.Set(0, 2, 1f);
 
