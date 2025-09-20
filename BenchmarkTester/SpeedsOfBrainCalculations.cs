@@ -11,7 +11,7 @@ namespace BenchmarkTester
         public void SpeedTest()
         {
             int[] columnsWithRows = { 10_020, 1000, 100, 50, 4 };
-            var factory = new RandomBrainFactory(columnsWithRows);
+            var factory = new NullBrainFactory(columnsWithRows);
             var brain = factory.GetBrain();
 
             float[] input = new float[10_020];

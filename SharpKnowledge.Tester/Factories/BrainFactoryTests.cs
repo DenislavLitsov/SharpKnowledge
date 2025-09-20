@@ -1,5 +1,6 @@
 ﻿using SharpKnowledge.Knowledge;
 using SharpKnowledge.Knowledge.Factories;
+using SharpKnowledge.Learning.BrainManagers;
 
 namespace SharpKnowledge.Tester.Factories
 {
@@ -14,7 +15,7 @@ namespace SharpKnowledge.Tester.Factories
         public void RandomBrainFactory_CreatesBrainWithCorrectDimensions()
         {
             int[] columnsWithRows = { 10, 50, 4 };
-            var factory = new RandomBrainFactory(columnsWithRows);
+            var factory = new NullBrainFactory(columnsWithRows);
             Brain brain = factory.GetBrain();
 
             Assert.That(brain.nodes.Array[0].Length == 10);
@@ -25,17 +26,18 @@ namespace SharpKnowledge.Tester.Factories
             Assert.That(brain.biases.Array[1].Length == 50);
             Assert.That(brain.biases.Array[2].Length == 4);
 
-            Assert.That(brain.weights.Array[0][0].Length == 50);
-            Assert.That(brain.weights.Array[1][0].Length == 4);
-            Assert.That(brain.weights.Array[2][0] == null);
+            Assert.That(brain.weights.Array[0].GetLength(1) == 50);
+            Assert.That(brain.weights.Array[1].GetLength(1) == 4);
+            Assert.That(brain.weights.Array[2] == null);
         }
 
         [Test]
         public void RandomBrainFactory_BiasesAreRandomized()
         {
             int[] columnsWithRows = { 4, 50, 2 };
-            var factory = new RandomBrainFactory(columnsWithRows);
-            Brain brain = factory.GetBrain();
+            var factory = new NullBrainFactory(columnsWithRows);
+            Brain mainBrain = factory.GetBrain();
+            Brain brain = new BrainEvolutioner().GetEvolvedBrain(mainBrain, 1, 0.5f);
 
             bool foundDifferentBias = false;
             float firstBias = brain.biases.Get(0, 0);
@@ -55,20 +57,20 @@ namespace SharpKnowledge.Tester.Factories
         public void RandomBrainFactory_WeightsAreRandomized()
         {
             int[] columnsWithRows = { 2, 2 };
-            var factory = new RandomBrainFactory(columnsWithRows);
+            var factory = new NullBrainFactory(columnsWithRows);
             Brain brain = factory.GetBrain();
 
             var weightsArray = brain.weights.Array;
-            float firstWeight = weightsArray[0][0][0];
+            float firstWeight = weightsArray[0][0,0];
             bool foundDifferentWeight = false;
 
             for (int col = 0; col < weightsArray.Length; col++)
             {
                 for (int row = 0; row < weightsArray[col].Length; row++)
                 {
-                    for (int depth = 0; depth < weightsArray[col][row].Length; depth++)
+                    for (int depth = 0; depth < weightsArray[col].GetLength(0); depth++)
                     {
-                        if (weightsArray[col][row][depth] != firstWeight)
+                        if (weightsArray[col][row,depth] != firstWeight)
                         {
                             foundDifferentWeight = true;
                             break;

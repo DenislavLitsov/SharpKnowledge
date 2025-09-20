@@ -75,10 +75,13 @@ namespace SharpKnowledge.Learning.BrainManagers
             }
             for (int col = 0; col < newBrain.weights.Array.Length - 1; col++)
             {
-                for (int row = 0; row < newBrain.weights.Array[col].Length; row++)
+                int length0 = newBrain.weights.Array[col].GetLength(0);
+                int length1 = newBrain.weights.Array[col].GetLength(1);
+
+                for (int row = 0; row < length0; row++)
                 {
-                    if (newBrain.weights.Array[col][row] == null) continue;
-                    for (int k = 0; k < newBrain.weights.Array[col][row].Length; k++)
+                    //if (newBrain.weights.Array[col][row] == null) continue;
+                    for (int k = 0; k < length1; k++)
                     {
                         if (_random.NextDouble() < mutationChance)
                         {

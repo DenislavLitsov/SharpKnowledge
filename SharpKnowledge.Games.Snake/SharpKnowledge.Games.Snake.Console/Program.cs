@@ -17,6 +17,7 @@ class Program
 
     static void Main(string[] args)
     {
+        StaticVariables.DataPath = "D:\\Programming\\SharpKnowledge\\SharpKnowledge.Learning\\bin\\Debug\\net9.0\\Data";
         _game = new SnakeGame(20, 20, new RandomGeneratorFactory(true, 10_000).GetRandomGenerator());
         _game.Initialize();
 
@@ -46,7 +47,7 @@ class Program
 
     private static void GameLoop(Brain mainBrain)
     {
-        const int frameDelay = 1000;
+        const int frameDelay = 100;
         int frameCount = 0;
         int maxFrames = System.Console.IsInputRedirected ? 50 : int.MaxValue; // Limit frames in test mode
 

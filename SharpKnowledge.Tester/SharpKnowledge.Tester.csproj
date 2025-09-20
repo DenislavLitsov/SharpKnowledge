@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharpKnowledge.Knowledge\SharpKnowledge.Knowledge.csproj" />
+    <ProjectReference Include="..\SharpKnowledge.Learning\SharpKnowledge.Learning.csproj" />
   </ItemGroup>
 
   <ItemGroup>

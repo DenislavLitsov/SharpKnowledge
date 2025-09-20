@@ -24,7 +24,7 @@ namespace SharpKnowledge.Learning
 
         public void RunSnake()
         {
-            int totalThreads = 100;
+            int totalThreads = 1;
             long totalRuns = 0;
             SnakeTeacher teacher = new SnakeTeacher(new RandomGeneratorFactory(true, 10000));
 
@@ -33,7 +33,7 @@ namespace SharpKnowledge.Learning
             if (latestModel == null)
             {
                 int[] columnsWithRows = { 400, 500, 100, 50, 4 };
-                var factory = new RandomBrainFactory(columnsWithRows);
+                var factory = new NullBrainFactory(columnsWithRows);
                 mainBrain = factory.GetBrain();
                 Console.WriteLine("Created random initial brain");
             }
@@ -61,19 +61,19 @@ namespace SharpKnowledge.Learning
                     mutationStrength = 1f;
                     Console.WriteLine("Super strong mutation");
                 }
-                else if (iterationsSenseLastBetterGeneration < 10)
+                else if (iterationsSenseLastBetterGeneration < 500)
                 {
                     mutationChance = 0.1f;
                     mutationStrength = 0.05f;
                     Console.WriteLine("Weak mutation");
                 }
-                else if (iterationsSenseLastBetterGeneration < 100)
+                else if (iterationsSenseLastBetterGeneration < 1500)
                 {
                     mutationChance = 0.20f;
                     mutationStrength = 0.25f;
                     Console.WriteLine("Moderate mutation");
                 }
-                else if (iterationsSenseLastBetterGeneration < 1000)
+                else if (iterationsSenseLastBetterGeneration < 5000)
                 {
                     mutationChance = 0.30f;
                     mutationStrength = 0.33f;
@@ -87,16 +87,20 @@ namespace SharpKnowledge.Learning
                 }
 
                 Console.WriteLine($"Start evolving brain with best {mainBrain.BestScore} generation: {mainBrain.Generation} iterations since last better: {iterationsSenseLastBetterGeneration}");
-                var threadedFunction = new ThreadedFunction<Brain[]>();
-                threadedFunction.Run(() =>
-                {
-                    var newBrains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
-                    return newBrains;
-                });
+                //var threadedFunction = new ThreadedFunction<Brain[]>();
+                //threadedFunction.Run(() =>
+                //{
+                //    var newBrains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
+                //    return newBrains;
+                //});
 
-                //brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
+                brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
                 Brain bestBrain = teacher.Teach(brains);
-                var cachedNewBrains = threadedFunction.WaitResult();
+                Console.WriteLine("Finished teach");
+                //var cachedNewBrains = threadedFunction.WaitResult();
+                Console.WriteLine("Finished evolving");
+
+                Console.WriteLine($"Best score of class: {bestBrain.BestScore}");
 
                 iterationsSenseLastBetterGeneration++;
 
@@ -105,23 +109,22 @@ namespace SharpKnowledge.Learning
                 {
                     iterationsSenseLastBetterGeneration = 0;
                     mainBrain = bestBrain;
-                    brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
+                    //brains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
                     Console.WriteLine($"Best score: {mainBrain.BestScore}, Generation: {mainBrain.Generation}");
 
                     if (mainBrain.Generation % 1 == 0)
                     {
                         new IO().Save(mainBrain, totalRuns, $"Best brain with score {mainBrain.BestScore}", StaticVariables.DataPath, "Snake");
-                        Console.WriteLine("Saved generation");
                     }
                 }
                 else
                 {
-                    brains = cachedNewBrains;
+                    //brains = cachedNewBrains;
                 }
 
                 totalRuns++;
                 stopwatch.Stop();
-                Console.WriteLine($"Total runs: {totalRuns}. Last run lasted: {stopwatch.ElapsedMilliseconds}ms for total of {totalThreads} brains or {stopwatch.ElapsedMilliseconds/totalThreads}ms per brain");
+                Console.WriteLine($"Total runs: {totalRuns}. Last run lasted: {stopwatch.ElapsedMilliseconds}ms for total of {totalThreads} brains or {stopwatch.ElapsedMilliseconds / totalThreads}ms per brain");
             }
         }
     }

@@ -17,7 +17,7 @@ namespace SharpKnowledge.Tester
         public void SaveAndLoadBrain()
         {
             int[] columnsWithRows = { 10, 50, 4 };
-            var factory = new RandomBrainFactory(columnsWithRows);
+            var factory = new NullBrainFactory(columnsWithRows);
             Brain brain = factory.GetBrain();
             brain.Generation = 10;
 
@@ -35,9 +35,9 @@ namespace SharpKnowledge.Tester
             Assert.That(res.biases.Array[1].Length == 50);
             Assert.That(res.biases.Array[2].Length == 4);
                         
-            Assert.That(res.weights.Array[0][0].Length == 50);
-            Assert.That(res.weights.Array[1][0].Length == 4);
-            Assert.That(res.weights.Array[2][0] == null);
+            Assert.That(res.weights.Array[0].GetLength(1) == 50);
+            Assert.That(res.weights.Array[1].GetLength(1) == 4);
+            Assert.That(res.weights.Array[2] == null);
         }
     }
 }

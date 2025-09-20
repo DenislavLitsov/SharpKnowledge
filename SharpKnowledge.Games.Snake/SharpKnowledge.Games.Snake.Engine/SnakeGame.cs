@@ -307,7 +307,7 @@ public class SnakeGame : BaseGame
 
     public override float GetScore()
     {
-        return this.Moves + this.Score;
+        return this.Moves + this.Score - Math.Abs(Snake[0].X - Food.X) - Math.Abs(Snake[0].Y - Food.Y);
     }
 
     public override float[] GetBrainInputs()

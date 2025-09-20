@@ -30,7 +30,7 @@ namespace SharpKnowledge.Learning.SchoolClasses
             if (latestModel == null)
             {
                 int[] columnsWithRows = { 402, 500, 100, 50, 4 };
-                var factory = new RandomBrainFactory(columnsWithRows);
+                var factory = new NullBrainFactory(columnsWithRows);
                 mainBrain = factory.GetBrain();
                 Console.WriteLine("Created random initial brain");
             }

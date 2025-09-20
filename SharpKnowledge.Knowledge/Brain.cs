@@ -44,45 +44,45 @@ namespace SharpKnowledge.Knowledge
 
             for (int mainNodeCol = 1; mainNodeCol < this.nodes.TotalColumns; mainNodeCol++)
             {
-                int mainNodeTotalRows = this.nodes.GetRows(mainNodeCol);
-                for (int mainNodeRow = 0; mainNodeRow < mainNodeTotalRows; mainNodeRow++)
-                {
-                    int prevCol = mainNodeCol - 1;
-                    int prevTotalRows = this.biases.GetRows(prevCol);
-
-                    float bias = this.biases.Get(mainNodeRow, mainNodeCol);
-                    float calculatedValue = bias;
-
-                    for (int calcRow = 0; calcRow < prevTotalRows; calcRow++)
-                    {
-                        float prevNodeValue = this.nodes.Get(calcRow, prevCol);
-                        float weight = this.weights.Get(calcRow, prevCol, mainNodeRow);
-
-                        calculatedValue += prevNodeValue * weight;
-                    }
-
-                    float sigmoidedValue = QuickMaths.Sigmoid(calculatedValue);
-
-                    this.nodes.Set(mainNodeRow, mainNodeCol, sigmoidedValue);
-                }
+                this.CalculateColumn(mainNodeCol);
             }
 
             float[] result = this.nodes.GetLastCol();
             return result;
         }
 
+        protected virtual void CalculateColumn(int mainNodeCol)
+        {
+            int mainNodeTotalRows = this.nodes.GetRows(mainNodeCol);
+            for (int mainNodeRow = 0; mainNodeRow < mainNodeTotalRows; mainNodeRow++)
+            {
+                int prevCol = mainNodeCol - 1;
+                int prevTotalRows = this.biases.GetRows(prevCol);
+
+                float bias = this.biases.Get(mainNodeRow, mainNodeCol);
+                float calculatedValue = bias;
+
+                for (int calcRow = 0; calcRow < prevTotalRows; calcRow++)
+                {
+                    float prevNodeValue = this.nodes.Get(calcRow, prevCol);
+                    float weight = this.weights.Get(calcRow, prevCol, mainNodeRow);
+
+                    calculatedValue += prevNodeValue * weight;
+                }
+
+                //float sigmoidedValue = QuickMaths.Sigmoid(calculatedValue);
+
+                this.nodes.Set(mainNodeRow, mainNodeCol, calculatedValue);
+            }
+        }
+
         public Brain Clone()
         {
-            float[][][] newWeightsArray = new float[this.weights.Array.Length][][];
+            float[][,] newWeightsArray = new float[this.weights.Array.Length][,];
             for (int col = 0; col < this.weights.Array.Length - 1; col++)
             {
-                newWeightsArray[col] = new float[this.weights.Array[col].Length][];
-                for (int row = 0; row < this.weights.Array[col].Length; row++)
-                {
-                        newWeightsArray[col][row] = new float[this.weights.Array[col][row].Length];
-                        Array.Copy(this.weights.Array[col][row], newWeightsArray[col][row], this.weights.Array[col][row].Length);
-                    
-                }
+                newWeightsArray[col] = new float[this.weights.Array[col].GetLength(0), this.weights.Array[col].GetLength(1)];
+                Array.Copy(this.weights.Array[col], newWeightsArray[col], this.weights.Array[col].Length);
             }
             ThreeDArray newWeights = new ThreeDArray(newWeightsArray);
             float[][] newBiasesArray = new float[this.biases.Array.Length][];
