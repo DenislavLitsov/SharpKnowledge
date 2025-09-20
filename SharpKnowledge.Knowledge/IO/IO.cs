@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -26,7 +27,9 @@ namespace SharpKnowledge.Knowledge.IO
                 WriteIndented = true,
                 IncludeFields = true,
             };
-            string jsonString = System.Text.Json.JsonSerializer.Serialize(saveModel, options);
+
+            var jsonString = JsonConvert.SerializeObject(saveModel);
+            //string jsonString = System.Text.Json.JsonSerializer.Serialize(saveModel, options);
 
             string fileTitle = $"gen_{brain.Generation}.json";
             string fullPath = Path.Combine(Path.Combine(dataPath, gameName), fileTitle);
@@ -48,7 +51,9 @@ namespace SharpKnowledge.Knowledge.IO
             {
                 IncludeFields = true,
             };
-            SaveModel? saveModel = System.Text.Json.JsonSerializer.Deserialize<SaveModel>(jsonString, options);
+            //SaveModel? saveModel = System.Text.Json.JsonSerializer.Deserialize<SaveModel>(jsonString, options);
+            SaveModel saveModel = JsonConvert.DeserializeObject<SaveModel>(jsonString);
+
             if (saveModel == null)
             {
                 throw new Exception("Failed to deserialize the SaveModel from the JSON file.");

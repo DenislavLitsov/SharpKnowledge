@@ -70,5 +70,16 @@ namespace SharpKnowledge.Knowledge.Factories
             var brain = new Brain(weights, biases);
             return brain;
         }
+
+        public GpuBrain GetGpuBrain()
+        {
+            int[] countsPerColumn = columnsWithRowsAndDepth.Select(col => col != null ? col.GetLength(0) : 0).ToArray();
+            TwoDArray biases = new TwoDArray(countsPerColumn);
+
+            ThreeDArray weights = new ThreeDArray(columnsWithRowsAndDepth);
+
+            var brain = new GpuBrain(weights, biases);
+            return brain;
+        }
     }
 }

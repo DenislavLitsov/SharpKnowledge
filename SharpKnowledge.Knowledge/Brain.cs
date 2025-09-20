@@ -76,7 +76,7 @@ namespace SharpKnowledge.Knowledge
             }
         }
 
-        public Brain Clone()
+        public virtual Brain Clone()
         {
             float[][,] newWeightsArray = new float[this.weights.Array.Length][,];
             for (int col = 0; col < this.weights.Array.Length - 1; col++)
