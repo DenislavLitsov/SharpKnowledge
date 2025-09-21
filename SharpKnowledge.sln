@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rendering", "Rendering", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpKnowledge.ILGPU.Tester", "SharpKnowledge.ILGPU.Tester\SharpKnowledge.ILGPU.Tester.csproj", "{CF0A064E-80CF-47F4-9CF7-DF04CB08781A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpKnowledge.Data", "SharpKnowledge.Data\SharpKnowledge.Data.csproj", "{9570B753-4998-4553-BAE4-9E629243CC57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{CF0A064E-80CF-47F4-9CF7-DF04CB08781A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF0A064E-80CF-47F4-9CF7-DF04CB08781A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF0A064E-80CF-47F4-9CF7-DF04CB08781A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9570B753-4998-4553-BAE4-9E629243CC57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9570B753-4998-4553-BAE4-9E629243CC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9570B753-4998-4553-BAE4-9E629243CC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9570B753-4998-4553-BAE4-9E629243CC57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +95,7 @@ Global
 		{29950A2C-7DF7-494B-9A04-0BFE1B4597B6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{00E81A6A-3570-4B9D-813F-3D86C42367BE} = {6476AC3E-C33B-444E-B38F-B153168CF30F}
 		{CF0A064E-80CF-47F4-9CF7-DF04CB08781A} = {DD3B3F81-4D98-4DFB-82CC-B10DB04F40B6}
+		{9570B753-4998-4553-BAE4-9E629243CC57} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F400C2D-0A9A-477E-B821-DD8B62BB5754}
