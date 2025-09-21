@@ -44,7 +44,7 @@ public class SnakeGame : BaseGame
         _height = height;
         _random = randomGenerator;
         _snake = new List<Position>();
-        _map = new float[width, height];
+        _map = new float[height, width];
         _currentDirection = Direction.Right;
         _gameState = GameState.Playing;
         _score = 0;
@@ -177,24 +177,16 @@ public class SnakeGame : BaseGame
         }
 
         // Set snake body positions to 0.5
-        for (int i = 1; i < _snake.Count; i++)
+        float indexOffSet = 0.5f / (_snake.Count);
+        for (int i = 0; i < _snake.Count; i++)
         {
             Position pos = _snake[i];
-            if (pos.X >= 0 && pos.X < _width && pos.Y >= 0 && pos.Y < _height)
-            {
-                _map[pos.Y, pos.X] = -0.5f; // Snake body
-            }
+            _map[pos.Y, pos.X] = -0.5f + (i+1) * indexOffSet; // Snake body\
         }
 
         // Set snake head to 1
-        if (_snake.Count > 0)
-        {
-            Position head = _snake[0];
-            if (head.X >= 0 && head.X < _width && head.Y >= 0 && head.Y < _height)
-            {
-                _map[head.Y, head.X] = -0.6f; // Snake head
-            }
-        }
+        Position head = _snake[0];
+        _map[head.Y, head.X] = -0.6f; // Snake head
 
         // Food
         _map[Food.Y, Food.X] = 1f; // Food
@@ -307,7 +299,8 @@ public class SnakeGame : BaseGame
 
     public override float GetScore()
     {
-        return this.Moves + this.Score - Math.Abs(Snake[0].X - Food.X) - Math.Abs(Snake[0].Y - Food.Y);
+        //return this.Moves + this.Score - Math.Abs(Snake[0].X - Food.X) - Math.Abs(Snake[0].Y - Food.Y);
+        return this.Score - Math.Abs(Snake[0].X - Food.X) * 5 - Math.Abs(Snake[0].Y - Food.Y) * 5 - (totalMoves - _totalMovesSenseLastEat);
     }
 
     public override float[] GetBrainInputs()

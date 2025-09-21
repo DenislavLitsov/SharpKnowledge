@@ -18,7 +18,7 @@ namespace SharpKnowledge.Learning
 
         public void RunSnake()
         {
-            int totalThreads = 100;
+            int totalThreads = 500;
 
             long totalRuns = 0;
             SnakeTeacher teacher = new SnakeTeacher(new RandomGeneratorFactory(true, 10000));
@@ -27,9 +27,10 @@ namespace SharpKnowledge.Learning
             Brain mainBrain;
             if (latestModel == null)
             {
-                int[] columnsWithRows = { 400, 500, 100, 50, 4 };
+                int[] columnsWithRows = { 400, 100, 50, 4 };
                 var factory = new NullBrainFactory(columnsWithRows);
                 mainBrain = factory.GetBrain();
+                mainBrain.BestScore = -20;
                 Console.WriteLine("Created random initial brain");
             }
             else
@@ -100,7 +101,7 @@ namespace SharpKnowledge.Learning
                 iterationsSenseLastBetterGeneration++;
 
                 if (mainBrain.BestScore < bestBrain.BestScore || 
-                    (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration > 1000))
+                    (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration > 10000))
                 {
                     iterationsSenseLastBetterGeneration = 0;
                     mainBrain = bestBrain;

@@ -2,38 +2,48 @@
 {
     public class CachedRandom : IRandomGenerator
     {
+        private static Dictionary<int, double[]> cachedNumbers = new Dictionary<int, double[]>();
         double[] _cachedNumbers;
         int currentIndex = 0;
 
         public CachedRandom(int totalCachedNumbers)
         {
-            var filePath = Path.Combine(StaticVariables.DataPath, "randoms", $"cachedRandoms_{totalCachedNumbers}.txt");
-            
-            if (!Directory.Exists(Path.Combine(StaticVariables.DataPath, "randoms")))
+            if (cachedNumbers.ContainsKey(totalCachedNumbers))
             {
-                Directory.CreateDirectory(Path.Combine(StaticVariables.DataPath, "randoms"));
-            }
-
-            if (File.Exists(filePath))
-            {
-                double[] doubles = File
-                    .ReadAllLines(filePath)
-                    .Select(x=>double.Parse(x))
-                    .ToArray();
-
-                this._cachedNumbers = doubles;
+                this._cachedNumbers = cachedNumbers[totalCachedNumbers];
             }
             else
             {
-                double[] doubles = new double[totalCachedNumbers];
-                Random random = new Random();
-                for (int i = 0; i < totalCachedNumbers; i++)
+                var filePath = Path.Combine(StaticVariables.DataPath, "randoms", $"cachedRandoms_{totalCachedNumbers}.txt");
+
+                if (!Directory.Exists(Path.Combine(StaticVariables.DataPath, "randoms")))
                 {
-                    doubles[i] = random.NextDouble();
+                    Directory.CreateDirectory(Path.Combine(StaticVariables.DataPath, "randoms"));
                 }
 
-                File.WriteAllLines(filePath, doubles.Select(d => d.ToString()));
-                this._cachedNumbers = doubles;
+                if (File.Exists(filePath))
+                {
+                    double[] doubles = File
+                        .ReadAllLines(filePath)
+                        .Select(x => double.Parse(x))
+                        .ToArray();
+
+                    this._cachedNumbers = doubles;
+                    cachedNumbers[totalCachedNumbers] = doubles;
+                }
+                else
+                {
+                    double[] doubles = new double[totalCachedNumbers];
+                    Random random = new Random();
+                    for (int i = 0; i < totalCachedNumbers; i++)
+                    {
+                        doubles[i] = random.NextDouble();
+                    }
+
+                    File.WriteAllLines(filePath, doubles.Select(d => d.ToString()));
+                    this._cachedNumbers = doubles;
+                    cachedNumbers[totalCachedNumbers] = doubles;
+                }
             }
         }
 

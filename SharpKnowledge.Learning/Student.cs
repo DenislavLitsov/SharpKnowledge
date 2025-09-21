@@ -1,5 +1,6 @@
 ﻿using SharpKnowledge.Knowledge;
 using SharpKnowledge.Playing;
+using System.Diagnostics;
 
 namespace SharpKnowledge.Learning
 {
