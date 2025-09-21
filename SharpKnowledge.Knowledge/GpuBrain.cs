@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SharpKnowledge.Knowledge
 {
-    public class GpuBrain : Brain
+    public class GpuBrain : BaseBrain
     {
         [JsonIgnore]
         public Context cudaContext;
@@ -23,6 +23,10 @@ namespace SharpKnowledge.Knowledge
         {
             this.cudaContext = cudaContext;
             this.cudaAccelerator = cudaAccelerator;
+        }
+
+        public GpuBrain(ThreeDArray weights, TwoDArray biases, int generation = 0) : base(weights, biases, generation)
+        {
         }
 
         protected override void CalculateColumn(int mainNodeCol)

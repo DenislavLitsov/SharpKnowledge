@@ -13,7 +13,7 @@ namespace BenchmarkTester
         {
             int[] columnsWithRows = { 400, 500, 100, 50, 4 };
             var factory = new NullBrainFactory(columnsWithRows);
-            var brain = factory.GetBrain();
+            var brain = factory.GetCpuBrain();
 
             float[] input = new float[columnsWithRows[0]];
             Random rnd = new Random();

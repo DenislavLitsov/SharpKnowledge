@@ -24,7 +24,7 @@ namespace SharpKnowledge.Knowledge.Factories
             }
         }
 
-        public Brain GetBrain()
+        public CpuBrain GetCpuBrain()
         {
             //Random rnd = new Random();
 
@@ -70,7 +70,7 @@ namespace SharpKnowledge.Knowledge.Factories
             // }
 
             // Construct and return the Brain
-            var brain = new Brain(weights, biases);
+            var brain = new CpuBrain(weights, biases);
             return brain;
         }
 
@@ -81,9 +81,7 @@ namespace SharpKnowledge.Knowledge.Factories
 
             ThreeDArray weights = new ThreeDArray(columnsWithRowsAndDepth);
 
-            var context = Context.CreateDefault();
-            var accelerator = context.CreateCudaAccelerator(0);
-            var brain = new GpuBrain(context, accelerator, weights, biases);
+            var brain = new GpuBrain(weights, biases);
             return brain;
         }
     }

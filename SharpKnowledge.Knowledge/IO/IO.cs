@@ -3,25 +3,26 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpKnowledge.Knowledge.IO
 {
-    public class IO
+    public class IO<BrainType> where BrainType : BaseBrain
     {
         public IO()
         {
         }
 
-        public void Save(Brain brain, long totalRuns,string description, string dataPath, string gameName)
+        public void Save(BrainType brain, long totalRuns,string description, string dataPath, string gameName)
         {
             if (!Directory.Exists(Path.Combine(dataPath, gameName)))
             {
                 Directory.CreateDirectory(Path.Combine(dataPath, gameName));
             }
 
-            var saveModel = new SaveModel(brain, description, totalRuns);
+            var saveModel = new SaveModel<BrainType>(brain, description, totalRuns);
             var options = new System.Text.Json.JsonSerializerOptions
             {
                 WriteIndented = true,
@@ -37,7 +38,7 @@ namespace SharpKnowledge.Knowledge.IO
             System.IO.File.WriteAllText(fullPath, jsonString);
         }
 
-        public SaveModel Load(int generation, string dataPath, string gameName)
+        public SaveModel<BrainType> Load(int generation, string dataPath, string gameName)
         {
             string fileTitle = $"gen_{generation}.json";
             string fullPath = Path.Combine(Path.Combine(dataPath, gameName), fileTitle);
@@ -52,7 +53,7 @@ namespace SharpKnowledge.Knowledge.IO
                 IncludeFields = true,
             };
             //SaveModel? saveModel = System.Text.Json.JsonSerializer.Deserialize<SaveModel>(jsonString, options);
-            SaveModel saveModel = JsonConvert.DeserializeObject<SaveModel>(jsonString);
+            SaveModel<BrainType> saveModel = JsonConvert.DeserializeObject<SaveModel<BrainType>>(jsonString);
 
             if (saveModel == null)
             {
@@ -61,7 +62,7 @@ namespace SharpKnowledge.Knowledge.IO
             return saveModel;
         }
 
-        public SaveModel LoadLatest(string dataPath, string gameName)
+        public SaveModel<BrainType> LoadLatest(string dataPath, string gameName)
         {
             if (!Directory.Exists(Path.Combine(dataPath, gameName)) || Directory.GetFiles(Path.Combine(dataPath, gameName)).Length == 0)
             {

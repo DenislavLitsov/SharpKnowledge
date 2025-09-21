@@ -2,6 +2,8 @@
 {
     public interface IBrainFactory
     {
-        Brain GetBrain();
+        CpuBrain GetCpuBrain();
+
+        GpuBrain GetGpuBrain();
     }
 }

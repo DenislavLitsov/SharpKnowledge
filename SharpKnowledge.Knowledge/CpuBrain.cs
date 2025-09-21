@@ -10,48 +10,14 @@ using System.Threading.Tasks;
 
 namespace SharpKnowledge.Knowledge
 {
-    [JsonSerializable(typeof(Brain))]
-    public class Brain
+    [JsonSerializable(typeof(CpuBrain))]
+    public class CpuBrain : BaseBrain
     {
-        public readonly ThreeDArray weights;
-        public readonly TwoDArray biases;
-
-        public TwoDArray nodes;
-
-        public int Generation;
-
-        public float BestScore = 0;
-
-        public Brain(ThreeDArray weights, TwoDArray biases, int generation = 0)
+        public CpuBrain(ThreeDArray weights, TwoDArray biases, int generation = 0) :  base(weights, biases, generation)
         {
-            this.weights = weights;
-            this.biases = biases;
-
-            int[] totalNodes = new int[this.biases.TotalColumns];
-            for (int i = 0; i < biases.TotalColumns; i++)
-            {
-                totalNodes[i] = biases.GetRows(i);
-            }
-
-            this.nodes = new TwoDArray(totalNodes);
-
-            this.Generation = generation;
         }
 
-        public float[] CalculateOutputs(float[] inputs)
-        {
-            this.SetInputs(inputs);
-
-            for (int mainNodeCol = 1; mainNodeCol < this.nodes.TotalColumns; mainNodeCol++)
-            {
-                this.CalculateColumn(mainNodeCol);
-            }
-
-            float[] result = this.nodes.GetLastCol();
-            return result;
-        }
-
-        protected virtual void CalculateColumn(int mainNodeCol)
+        protected override void CalculateColumn(int mainNodeCol)
         {
             int mainNodeTotalRows = this.nodes.GetRows(mainNodeCol);
             for (int mainNodeRow = 0; mainNodeRow < mainNodeTotalRows; mainNodeRow++)
@@ -76,7 +42,7 @@ namespace SharpKnowledge.Knowledge
             }
         }
 
-        public virtual Brain Clone()
+        public override CpuBrain Clone()
         {
             float[][,] newWeightsArray = new float[this.weights.Array.Length][,];
             for (int col = 0; col < this.weights.Array.Length - 1; col++)
@@ -92,16 +58,9 @@ namespace SharpKnowledge.Knowledge
                 Array.Copy(this.biases.Array[col], newBiasesArray[col], this.biases.Array[col].Length);
             }
             TwoDArray newBiases = new TwoDArray(newBiasesArray);
-            Brain newBrain = new Brain(newWeights, newBiases, this.Generation);
+            CpuBrain newBrain = new CpuBrain(newWeights, newBiases, this.Generation);
             return newBrain;
         }
 
-        private void SetInputs(float[] inputs)
-        {
-            for (int i = 0; i < inputs.Length; i++)
-            {
-                this.nodes.Set(i, 0, inputs[i]);
-            }
-        }
     }
 }

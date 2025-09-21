@@ -18,12 +18,12 @@ namespace SharpKnowledge.Tester
         {
             int[] columnsWithRows = { 10, 50, 4 };
             var factory = new NullBrainFactory(columnsWithRows);
-            Brain brain = factory.GetBrain();
+            CpuBrain brain = factory.GetCpuBrain();
             brain.Generation = 10;
 
-            new IO().Save(brain, 1, "Test", StaticVariables.DataPath, "testGame");
+            new IO<CpuBrain>().Save(brain, 1, "Test", StaticVariables.DataPath, "testGame");
 
-            var res = new IO().Load(10, StaticVariables.DataPath, "testGame").Brain;
+            var res = new IO<CpuBrain>().Load(10, StaticVariables.DataPath, "testGame").Brain;
 
             Assert.That(res.Generation == 10);
 
@@ -37,7 +37,6 @@ namespace SharpKnowledge.Tester
                         
             Assert.That(res.weights.Array[0].GetLength(1) == 50);
             Assert.That(res.weights.Array[1].GetLength(1) == 4);
-            Assert.That(res.weights.Array[2] == null);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace SharpKnowledge.Learning
         {
         }
 
-        public Brain Teach(Brain[] brains)
+        public BaseBrain Teach(BaseBrain[] brains)
         {
             Thread[] threads = new Thread[brains.Length];
             this.students = new Student[brains.Length];

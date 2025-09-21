@@ -23,13 +23,13 @@ namespace SharpKnowledge.Learning
             long totalRuns = 0;
             SnakeTeacher teacher = new SnakeTeacher(new RandomGeneratorFactory(true, 10000));
 
-            var latestModel = new IO().LoadLatest(StaticVariables.DataPath, "Snake");
-            Brain mainBrain;
+            var latestModel = new IO<CpuBrain>().LoadLatest(StaticVariables.DataPath, "Snake");
+            BaseBrain mainBrain;
             if (latestModel == null)
             {
                 int[] columnsWithRows = { 400, 100, 50, 4 };
                 var factory = new NullBrainFactory(columnsWithRows);
-                mainBrain = factory.GetBrain();
+                mainBrain = factory.GetCpuBrain();
                 mainBrain.BestScore = -20;
                 Console.WriteLine("Created random initial brain");
             }
@@ -83,7 +83,7 @@ namespace SharpKnowledge.Learning
                 }
 
                 Console.WriteLine($"Start evolving brain with best {mainBrain.BestScore} generation: {mainBrain.Generation} iterations since last better: {iterationsSenseLastBetterGeneration}");
-                var threadedFunction = new ThreadedFunction<Brain[]>();
+                var threadedFunction = new ThreadedFunction<BaseBrain[]>();
                 threadedFunction.Run(() =>
                 {
                     var newBrains = brainEvolutioner.EvolveBrain(mainBrain, totalThreads, mutationChance, mutationStrength);
@@ -91,7 +91,7 @@ namespace SharpKnowledge.Learning
                 });
 
                 Console.WriteLine("Start teaching");
-                Brain bestBrain = teacher.Teach(brains);
+                BaseBrain bestBrain = teacher.Teach(brains);
                 Console.WriteLine("Finished teach");
                 var cachedNewBrains = threadedFunction.WaitResult();
                 Console.WriteLine("Finished evolving");
@@ -110,7 +110,7 @@ namespace SharpKnowledge.Learning
 
                     if (mainBrain.Generation % 1 == 0)
                     {
-                        new IO().Save(mainBrain, totalRuns, $"Best brain with score {mainBrain.BestScore}", StaticVariables.DataPath, "Snake");
+                        new IO<BaseBrain>().Save(mainBrain, totalRuns, $"Best brain with score {mainBrain.BestScore}", StaticVariables.DataPath, "Snake");
                     }
                 }
                 else

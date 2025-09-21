@@ -25,7 +25,7 @@ class Program
         //var factory = new RandomBrainFactory(columnsWithRows);
         //Brain mainBrain = factory.GetBrain();
 
-        var latestModel = new IO().LoadLatest(StaticVariables.DataPath, "Snake");
+        var latestModel = new IO<CpuBrain>().LoadLatest(StaticVariables.DataPath, "Snake");
 
         GameLoop(latestModel.Brain);
     }
@@ -45,7 +45,7 @@ class Program
         } while (true);
     }
 
-    private static void GameLoop(Brain mainBrain)
+    private static void GameLoop(CpuBrain mainBrain)
     {
         const int frameDelay = 100;
         int frameCount = 0;

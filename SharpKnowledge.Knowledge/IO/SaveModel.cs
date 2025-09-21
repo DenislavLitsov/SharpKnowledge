@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace SharpKnowledge.Knowledge.IO
 {
-    [JsonSerializable(typeof(SaveModel))]
-    public class SaveModel
+    public class SaveModel<BrainType> where BrainType : BaseBrain
     {
-        public SaveModel(Brain brain, string description, long totalRuns)
+        private BaseBrain brain;
+
+        public SaveModel(BrainType brain, string description, long totalRuns)
         {
             Brain = brain;
             Description = description;
@@ -18,7 +19,7 @@ namespace SharpKnowledge.Knowledge.IO
             Time = DateTime.UtcNow;
         }
 
-        public Brain Brain { get; set; }
+        public BrainType Brain { get; set; }
 
         public string Description { get; set; }
 

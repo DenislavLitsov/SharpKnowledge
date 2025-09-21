@@ -6,15 +6,15 @@ namespace SharpKnowledge.Learning
 {
     public class Student
     {
-        private readonly Brain brain;
+        private readonly BaseBrain brain;
         private readonly BaseGame baseGame;
 
-        public Brain Brain
+        public BaseBrain Brain
         {
             get { return brain; }
         }
 
-        public Student(Brain brain, BaseGame baseGame)
+        public Student(BaseBrain brain, BaseGame baseGame)
         {
             this.brain = brain;
             this.baseGame = baseGame;

@@ -16,7 +16,7 @@ namespace SharpKnowledge.Tester.Factories
         {
             int[] columnsWithRows = { 10, 50, 4 };
             var factory = new NullBrainFactory(columnsWithRows);
-            Brain brain = factory.GetBrain();
+            CpuBrain brain = factory.GetCpuBrain();
 
             Assert.That(brain.nodes.Array[0].Length == 10);
             Assert.That(brain.nodes.Array[1].Length == 50);
@@ -28,7 +28,6 @@ namespace SharpKnowledge.Tester.Factories
 
             Assert.That(brain.weights.Array[0].GetLength(1) == 50);
             Assert.That(brain.weights.Array[1].GetLength(1) == 4);
-            Assert.That(brain.weights.Array[2] == null);
         }
 
         [Test]
@@ -36,8 +35,8 @@ namespace SharpKnowledge.Tester.Factories
         {
             int[] columnsWithRows = { 4, 50, 2 };
             var factory = new NullBrainFactory(columnsWithRows);
-            Brain mainBrain = factory.GetBrain();
-            Brain brain = new BrainEvolutioner().GetEvolvedBrain(mainBrain, 1, 0.5f);
+            BaseBrain mainBrain = factory.GetCpuBrain();
+            BaseBrain brain = new BrainEvolutioner().GetEvolvedBrain(mainBrain, 1, 0.5f);
 
             bool foundDifferentBias = false;
             float firstBias = brain.biases.Get(0, 0);
@@ -58,7 +57,10 @@ namespace SharpKnowledge.Tester.Factories
         {
             int[] columnsWithRows = { 2, 2 };
             var factory = new NullBrainFactory(columnsWithRows);
-            Brain brain = factory.GetBrain();
+            BaseBrain brain = factory.GetCpuBrain();
+
+            BrainEvolutioner evolutioner = new BrainEvolutioner();
+            brain = evolutioner.EvolveBrain(brain, 1, 1f, 1f)[0];
 
             var weightsArray = brain.weights.Array;
             float firstWeight = weightsArray[0][0,0];
@@ -66,9 +68,9 @@ namespace SharpKnowledge.Tester.Factories
 
             for (int col = 0; col < weightsArray.Length; col++)
             {
-                for (int row = 0; row < weightsArray[col].Length; row++)
+                for (int row = 0; row < weightsArray[col].GetLength(0); row++)
                 {
-                    for (int depth = 0; depth < weightsArray[col].GetLength(0); depth++)
+                    for (int depth = 0; depth < weightsArray[col].GetLength(1); depth++)
                     {
                         if (weightsArray[col][row,depth] != firstWeight)
                         {

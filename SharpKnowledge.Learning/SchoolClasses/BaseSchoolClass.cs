@@ -14,11 +14,11 @@ namespace SharpKnowledge.Learning.SchoolClasses
         protected readonly string className;
         protected readonly BaseTeacher teacher;
         protected readonly BrainEvolutioner brainEvolutioner;
-        protected readonly Brain initialBrain;
+        protected readonly CpuBrain initialBrain;
 
         public bool StopToken = false;
 
-        public BaseSchoolClass(string className, BaseTeacher teacher, BrainEvolutioner brainEvolutioner, Brain initialBrain)
+        public BaseSchoolClass(string className, BaseTeacher teacher, BrainEvolutioner brainEvolutioner, CpuBrain initialBrain)
         {
             this.className = className;
             this.teacher = teacher;
