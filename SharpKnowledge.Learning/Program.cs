@@ -11,7 +11,7 @@ namespace SharpKnowledge.Learning
         public static void Main(string[] args)
         {
             School school = new School();
-            school.RunSnake();
+            school.StartLearning();
         }
     }
 }

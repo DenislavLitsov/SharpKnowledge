@@ -9,21 +9,23 @@ using System.Threading.Tasks;
 
 namespace SharpKnowledge.Learning.SchoolClasses
 {
-    public abstract class BaseSchoolClass
+    public abstract class BaseSchoolClass<BrainType> where BrainType : BaseBrain
     {
+        protected readonly int learningThreads;
         protected readonly string className;
         protected readonly BaseTeacher teacher;
         protected readonly BrainEvolutioner brainEvolutioner;
-        protected readonly CpuBrain initialBrain;
+        protected readonly BaseBrain initialBrain;
 
         public bool StopToken = false;
 
-        public BaseSchoolClass(string className, BaseTeacher teacher, BrainEvolutioner brainEvolutioner, CpuBrain initialBrain)
+        public BaseSchoolClass(string className, BaseTeacher teacher, BrainEvolutioner brainEvolutioner, BaseBrain initialBrain, int learningThreads)
         {
             this.className = className;
             this.teacher = teacher;
             this.brainEvolutioner = brainEvolutioner;
             this.initialBrain = initialBrain;
+            this.learningThreads = learningThreads;
         }
 
         public Thread StartClass()

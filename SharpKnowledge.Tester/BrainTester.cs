@@ -3,13 +3,6 @@ using ILGPU.Runtime.Cuda;
 using SharpKnowledge.Common;
 using SharpKnowledge.Knowledge;
 using SharpKnowledge.Knowledge.Factories;
-using SharpKnowledge.Learning.BrainManagers;
-using System;
-using System.Collections.Generic;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpKnowledge.Tester
 {
