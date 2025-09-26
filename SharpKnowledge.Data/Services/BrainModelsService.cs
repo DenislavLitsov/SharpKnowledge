@@ -19,6 +19,17 @@ namespace SharpKnowledge.Data.Services
             return await _context.Set<BrainModel>().ToListAsync();
         }
 
+        public async Task<IEnumerable<BrainModel>> GetAllByNameAsync(string name)
+        {
+            return await _context.Set<BrainModel>().Where(b => b.Name == name).ToListAsync();
+        }
+
+        public async Task<BrainModel?> GetBestFromNameAsync(string name)
+        {
+            var res = await _context.Set<BrainModel>().Where(b => b.Name == name).OrderByDescending(x => x.BestScore).FirstOrDefaultAsync();
+            return res;
+        }
+
         public async Task<BrainModel?> GetByIdAsync(int id)
         {
             return await _context.Set<BrainModel>().FindAsync(id);

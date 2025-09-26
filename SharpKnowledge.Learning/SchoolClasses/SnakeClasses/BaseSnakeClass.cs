@@ -67,8 +67,9 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
 
                 iterationsSenseLastBetterGeneration++;
 
-                if (mainBrain.BestScore < bestBrain.BestScore ||
-                    (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration > 10000))
+                if (mainBrain.BestScore < bestBrain.BestScore )
+                    // ||
+                    // (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration > 10000))
                 {
                     iterationsSenseLastBetterGeneration = 0;
                     mainBrain = bestBrain;

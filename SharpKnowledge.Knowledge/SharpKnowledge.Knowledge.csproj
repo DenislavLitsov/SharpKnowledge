@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharpKnowledge.Common\SharpKnowledge.Common.csproj" />
+    <ProjectReference Include="..\SharpKnowledge.Data\SharpKnowledge.Data.csproj" />
   </ItemGroup>
 
 </Project>

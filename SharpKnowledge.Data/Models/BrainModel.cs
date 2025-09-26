@@ -2,7 +2,13 @@ namespace SharpKnowledge.Data.Models
 {
     public class BrainModel
     {
-        public int Id { get; set; }
+        public BrainModel()
+        {
+            this.Id = Guid.NewGuid();
+            this.Time = DateTime.UtcNow;
+        }
+
+        public Guid Id { get; set; }
         public string BrainType { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

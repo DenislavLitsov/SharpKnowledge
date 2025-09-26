@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace SharpKnowledge.Knowledge
 {
-    [JsonSerializable(typeof(CpuBrain))]
     public class CpuBrain : BaseBrain
     {
         public CpuBrain(ThreeDArray weights, TwoDArray biases, int generation = 0) :  base(weights, biases, generation)

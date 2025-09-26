@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using SharpKnowledge.Data.Models;
+using SharpKnowledge.Data.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,11 +13,74 @@ namespace SharpKnowledge.Knowledge.IO
 {
     public class IO<BrainType> where BrainType : BaseBrain
     {
+        private readonly BrainModelsService _brainModelsService;
+
         public IO()
         {
+            _brainModelsService = new BrainModelsService();
         }
 
-        public void Save(BrainType brain, long totalRuns,string description, string dataPath, string gameName)
+        public void Save(BaseBrain baseBrain, long totalRuns, string description, string gameName)
+        {
+
+            float[][,] weightsArray = baseBrain.weights.Array;
+            int layers = weightsArray.Length;
+            int rows = weightsArray[0].GetLength(0);
+            int cols = weightsArray[0].GetLength(1);
+
+            float[,,] weights3D = new float[layers, rows, cols];
+            for (int l = 0; l < layers; l++)
+            {
+                for (int r = 0; r < rows; r++)
+                {
+                    for (int c = 0; c < cols; c++)
+                    {
+                        weights3D[l, r, c] = weightsArray[l][r, c];
+                    }
+                }
+            }
+
+            int rows2 = baseBrain.biases.Array.Length;
+            int cols2 = baseBrain.biases.Array[0].Length;
+            float[,] parsedBiases = new float[rows2, cols2];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols2; j++)
+                {
+                    parsedBiases[i, j] = baseBrain.biases.Array[i][j];
+                }
+            }
+
+            var brainModel = new Data.Models.BrainModel
+            {
+                Name = gameName,
+                Generation = baseBrain.Generation,
+                BestScore = baseBrain.BestScore,
+                Description = description,
+                TotalRuns = totalRuns,
+                Time = DateTime.UtcNow,
+                Weights = weights3D,
+                Biases = parsedBiases
+            };
+
+            _brainModelsService.CreateAsync(brainModel).Wait();
+        }
+
+        public Tuple<BrainModel, CpuBrain> LoadCpuBrain(Guid brainId)
+        {
+            var brainModel = _brainModelsService.GetByIdAsync(brainId).Result;
+            var cpuBrain = new CpuBrain(brainModel.Weights, brainModel.Biases);
+            return Tuple.Create(brainModel, cpuBrain);
+        }
+
+        public Tuple<BrainModel, GpuBrain> LoadGpuBrain(Guid brainId)
+        {
+            var brainModel = _brainModelsService.GetByIdAsync(brainId).Result;
+            var gpuBrain = new GpuBrain(brainModel.Weights, brainModel.Biases);
+            return Tuple.Create(brainModel, gpuBrain);
+        }
+
+        public void Save(BrainType brain, long totalRuns, string description, string dataPath, string gameName)
         {
             if (!Directory.Exists(Path.Combine(dataPath, gameName)))
             {
@@ -81,10 +146,10 @@ namespace SharpKnowledge.Knowledge.IO
             }
 
             var allGens = Directory.GetFiles(Path.Combine(dataPath, gameName))
-                .Select(x=>Path.GetFileName(x))
+                .Select(x => Path.GetFileName(x))
                 .Select(x => x.Replace("gen_", ""))
                 .Select(x => x.Replace(".json", ""))
-                .Select(x=>int.Parse(x))
+                .Select(x => int.Parse(x))
                 .ToArray();
 
             return allGens;
