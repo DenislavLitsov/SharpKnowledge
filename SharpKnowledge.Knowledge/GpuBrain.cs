@@ -19,13 +19,13 @@ namespace SharpKnowledge.Knowledge
         [JsonIgnore]
         public Accelerator cudaAccelerator;
 
-        public GpuBrain(Context cudaContext, Accelerator cudaAccelerator, ThreeDArray weights, TwoDArray biases, int generation = 0) : base(weights, biases, generation)
+        public GpuBrain(Context cudaContext, Accelerator cudaAccelerator, ThreeDArray weights, TwoDArray biases, int generation = 0, float bestScore = 0) : base(weights, biases, generation, bestScore)
         {
             this.cudaContext = cudaContext;
             this.cudaAccelerator = cudaAccelerator;
         }
 
-        public GpuBrain(ThreeDArray weights, TwoDArray biases, int generation = 0) : base(weights, biases, generation)
+        public GpuBrain(ThreeDArray weights, TwoDArray biases, int generation = 0, float bestScore = 0) : base(weights, biases, generation, bestScore)
         {
         }
 

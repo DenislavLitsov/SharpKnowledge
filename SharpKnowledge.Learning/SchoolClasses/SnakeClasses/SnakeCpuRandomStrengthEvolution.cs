@@ -19,6 +19,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
 
         public SnakeCpuRandomStrengthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_Snake_400_100_50_4", teacher, brainEvolutioner, null, learningThreads)
         {
+            System.Console.WriteLine($"Create {nameof(SnakeCpuRandomStrengthEvolution)} with {learningThreads} learning threads");
         }
 
         protected override (float mutationChance, float mutationStrength) GetMutationStrength()

@@ -17,7 +17,6 @@ class Program
 
     static void Main(string[] args)
     {
-        StaticVariables.DataPath = "D:\\Programming\\SharpKnowledge\\SharpKnowledge.Learning\\bin\\Debug\\net9.0\\Data";
         _game = new SnakeGame(20, 20, new RandomGeneratorFactory(true, 10_000).GetRandomGenerator());
         _game.Initialize();
 

@@ -52,7 +52,7 @@ namespace SharpKnowledge.Data.Services
                     .Where(wc => wc.WeightId == weight.Id).ToList()
                     .OrderBy(x => x.Id)
                     .ToList();
-                    
+
                 weight.WeightData = col;
             }
 
@@ -62,9 +62,9 @@ namespace SharpKnowledge.Data.Services
             return res;
         }
 
-        public Guid GetLatestGenerationId(string name)
+        public Guid GetBestScore(string name)
         {
-            var res = _context.Set<BrainModel>().Where(b => b.Name == name).OrderByDescending(x => x.Generation).FirstOrDefault();
+            var res = _context.Set<BrainModel>().Where(b => b.Name == name).OrderByDescending(x => x.BestScore).FirstOrDefault();
             if (res == null) return Guid.Empty;
 
             return res.Id;

@@ -14,11 +14,17 @@
             }
             else
             {
-                var filePath = Path.Combine(StaticVariables.DataPath, "randoms", $"cachedRandoms_{totalCachedNumbers}.txt");
+                var dataPath = EnvironmentManager.GetDataPath();
+                var filePath = Path.Combine(dataPath, "randoms", $"cachedRandoms_{totalCachedNumbers}.txt");
 
-                if (!Directory.Exists(Path.Combine(StaticVariables.DataPath, "randoms")))
+                if (!Directory.Exists(Path.Combine(dataPath, "randoms")))
                 {
-                    Directory.CreateDirectory(Path.Combine(StaticVariables.DataPath, "randoms"));
+                    Directory.CreateDirectory(Path.Combine(dataPath, "randoms"));
+                    System.Console.WriteLine($"Created new data path for randoms: {Path.Combine(dataPath, "randoms")}");
+                }
+                else
+                {
+                    System.Console.WriteLine($"Data path for randoms exists already: {Path.Combine(dataPath, "randoms")}");
                 }
 
                 if (File.Exists(filePath))

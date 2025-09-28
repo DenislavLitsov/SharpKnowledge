@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SharpKnowledge.Common;
 using SharpKnowledge.Data.Models;
 using System.Reflection.Metadata;
 
@@ -10,7 +11,7 @@ namespace SharpKnowledge.Data
         public DbSet<BrainModel> BrainModels { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseNpgsql("Host=localhost;Database=AIModels;Username=AIModelsLogin;Password=asdfasdf");
+            => optionsBuilder.UseNpgsql(EnvironmentManager.GetDBConnectionString());
 
         public static PostgreContext GetContext()
         {

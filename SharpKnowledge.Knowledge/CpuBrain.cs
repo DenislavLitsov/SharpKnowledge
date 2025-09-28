@@ -12,7 +12,7 @@ namespace SharpKnowledge.Knowledge
 {
     public class CpuBrain : BaseBrain
     {
-        public CpuBrain(ThreeDArray weights, TwoDArray biases, int generation = 0) :  base(weights, biases, generation)
+        public CpuBrain(ThreeDArray weights, TwoDArray biases, int generation = 0, float bestScore = 0) :  base(weights, biases, generation, bestScore)
         {
         }
 

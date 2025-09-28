@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SharpKnowledge.Learning": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

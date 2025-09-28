@@ -1,0 +1,10 @@
+
+// GO IN Root
+// BUILD
+docker build . -t sharp-knowledge-learn
+
+// Start no build
+docker compose up
+
+// Start compose with build
+docker-compose up -d --no-deps --build

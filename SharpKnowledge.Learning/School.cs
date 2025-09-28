@@ -24,7 +24,7 @@ namespace SharpKnowledge.Learning
             var snakeClass = new SnakeCpuRandomStrengthEvolution(
                 new SnakeTeacher(new RandomGeneratorFactory(true, 10000)), 
                 brainEvolutioner, 
-                2);
+                EnvironmentManager.GetAggresiveCPUSnakeLearningTotalThreads());
 
             cpuClasses.Add(snakeClass);
             

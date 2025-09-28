@@ -41,13 +41,13 @@ namespace SharpKnowledge.Knowledge.IO
         public (BrainModel brainModel, CpuBrain cpuBrain) LoadCpuBrain(Guid brainId)
         {
             var brainModel = _brainModelsService.GetById(brainId);
-            var cpuBrain = new CpuBrain(new Utility.ThreeDArray(brainModel.GetWeightsArray()), new Utility.TwoDArray(brainModel.GetBiasesArray()), brainModel.Generation);
+            var cpuBrain = new CpuBrain(new Utility.ThreeDArray(brainModel.GetWeightsArray()), new Utility.TwoDArray(brainModel.GetBiasesArray()), brainModel.Generation, brainModel.BestScore);
             return (brainModel, cpuBrain);
         }
 
         public (BrainModel brainModel, CpuBrain cpuBrain) LoadLatestCpuBrain(string game)
         {
-            var brainId = _brainModelsService.GetLatestGenerationId(game);
+            var brainId = _brainModelsService.GetBestScore(game);
             if (brainId == Guid.Empty)
             {
                 return (null, null);
@@ -58,13 +58,13 @@ namespace SharpKnowledge.Knowledge.IO
         public (BrainModel brainModel, GpuBrain gpuBrain) LoadGpuBrain(Guid brainId)
         {
             var brainModel = _brainModelsService.GetById(brainId);
-            var gpuBrain = new GpuBrain(new Utility.ThreeDArray(brainModel.GetWeightsArray()), new Utility.TwoDArray(brainModel.GetBiasesArray()), brainModel.Generation);
+            var gpuBrain = new GpuBrain(new Utility.ThreeDArray(brainModel.GetWeightsArray()), new Utility.TwoDArray(brainModel.GetBiasesArray()), brainModel.Generation, brainModel.BestScore);
             return (brainModel, gpuBrain);
         }
 
         public (BrainModel brainModel, GpuBrain gpuBrain) LoadLatestGpuBrain(string game)
         {
-            var brainId = _brainModelsService.GetLatestGenerationId(game);
+            var brainId = _brainModelsService.GetBestScore(game);
             if (brainId != Guid.Empty)
             {
                 return (null, null);
@@ -75,7 +75,7 @@ namespace SharpKnowledge.Knowledge.IO
 
         public Guid GetLatestId(string gameName)
         {
-            var bestBrainId = this._brainModelsService.GetLatestGenerationId(gameName);
+            var bestBrainId = this._brainModelsService.GetBestScore(gameName);
             return bestBrainId;
         }
 
