@@ -25,18 +25,8 @@ namespace SharpKnowledge.Learning
                 new SnakeTeacher(new RandomGeneratorFactory(true, 10000)), 
                 brainEvolutioner, 
                 EnvironmentManager.GetAggresiveCPUSnakeLearningTotalThreads());
-            var snakeClass2 = new SnakeCpuRandomStrengthEvolution(
-                new SnakeTeacher(new RandomGeneratorFactory(true, 10000)), 
-                brainEvolutioner, 
-                EnvironmentManager.GetAggresiveCPUSnakeLearningTotalThreads());
-            var snakeClass3 = new SnakeCpuRandomStrengthEvolution(
-                new SnakeTeacher(new RandomGeneratorFactory(true, 10000)), 
-                brainEvolutioner, 
-                EnvironmentManager.GetAggresiveCPUSnakeLearningTotalThreads());
 
             cpuClasses.Add(snakeClass);
-            // cpuClasses.Add(snakeClass2);
-            // cpuClasses.Add(snakeClass3);
             
             List<Thread> threads = new List<Thread>();
             foreach (var schoolClass in cpuClasses)

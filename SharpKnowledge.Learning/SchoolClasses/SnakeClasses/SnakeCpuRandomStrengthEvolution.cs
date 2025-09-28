@@ -29,7 +29,13 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
 
             var rnd = Random.NextDouble();
 
-            if (rnd < 0.1f)
+            if (rnd < 0.05f)
+            {
+                mutationChance = 1f;
+                mutationStrength = 1f;
+                Console.WriteLine("MEGA mutation");
+            }
+            else if (rnd < 0.1f)
             {
                 mutationChance = 0.50f;
                 mutationStrength = 1f;

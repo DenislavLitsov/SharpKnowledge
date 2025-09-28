@@ -31,7 +31,6 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
         protected override void MainRun()
         {
             long totalRuns = 0;
-            SnakeTeacher teacher = new SnakeTeacher(new RandomGeneratorFactory(true, 10000));
 
             LoadInitialBrain();
             totalRuns = loadedModel.TotalRuns;
@@ -55,6 +54,8 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
 
                 Console.WriteLine($"Start evolving brain with best {mainBrain.BestScore} generation: {mainBrain.Generation} iterations since last better: {iterationsSenseLastBetterGeneration}");
                 var threadedFunction = new ThreadedFunction<BaseBrain[]>();
+
+                Console.WriteLine($"TotalChange: {mutationChance * mutationStrength * 100}% Mutation chance: {mutationChance}, strength: {mutationStrength}");
                 threadedFunction.Run(() =>
                 {
                     var newBrains = brainEvolutioner.EvolveBrain(mainBrain, learningThreads, mutationChance, mutationStrength);
@@ -71,9 +72,9 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
 
                 iterationsSenseLastBetterGeneration++;
 
-                if (mainBrain.BestScore < bestBrain.BestScore )
-                    // ||
-                    // (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration > 10000))
+                if (mainBrain.BestScore < bestBrain.BestScore)
+                // ||
+                // (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration > 10000))
                 {
                     iterationsSenseLastBetterGeneration = 0;
                     mainBrain = bestBrain;
