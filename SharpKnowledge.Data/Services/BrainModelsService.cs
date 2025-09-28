@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SharpKnowledge.Data.Models;
@@ -14,46 +16,68 @@ namespace SharpKnowledge.Data.Services
             _context = PostgreContext.GetContext();
         }
 
-        public async Task<List<BrainModel>> GetAllAsync()
+        public List<BrainModel> GetAll()
         {
-            return await _context.Set<BrainModel>().ToListAsync();
+            return _context.Set<BrainModel>().ToList();
         }
 
-        public async Task<IEnumerable<BrainModel>> GetAllByNameAsync(string name)
+        public IEnumerable<BrainModel> GetAllByName(string name)
         {
-            return await _context.Set<BrainModel>().Where(b => b.Name == name).ToListAsync();
+            return _context.Set<BrainModel>().Where(b => b.Name == name).ToList();
         }
 
-        public async Task<BrainModel?> GetBestFromNameAsync(string name)
+        public BrainModel? GetBestFromName(string name)
         {
-            var res = await _context.Set<BrainModel>().Where(b => b.Name == name).OrderByDescending(x => x.BestScore).FirstOrDefaultAsync();
+            var res = _context.Set<BrainModel>().Where(b => b.Name == name).OrderByDescending(x => x.BestScore).FirstOrDefault();
             return res;
         }
 
-        public async Task<BrainModel?> GetByIdAsync(int id)
+        public BrainModel? GetById(Guid id)
         {
-            return await _context.Set<BrainModel>().FindAsync(id);
+            var res = _context.Set<BrainModel>().FirstOrDefault(x => x.Id == id);
+            if (res == null)
+                return null;
+
+            var biases = _context.Set<Bias>().Where(b => b.BrainModelId == id).ToList();
+            var weights = _context.Set<Weight>().Where(w => w.BrainModelId == id).ToList();
+            
+            res.BiasesData = biases;
+            res.WeightsData = weights;
+
+            return res;
         }
 
-        public async Task<BrainModel> CreateAsync(BrainModel model)
+        public Guid GetLatestGenerationId(string name)
+        {
+            var res = _context.Set<BrainModel>().Where(b => b.Name == name).OrderByDescending(x => x.Generation).FirstOrDefault();
+            if (res == null) return Guid.Empty;
+
+            return res.Id;
+        }
+
+        public BrainModel Create(BrainModel model)
         {
             _context.Set<BrainModel>().Add(model);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return model;
         }
 
-        public async Task<bool> UpdateAsync(BrainModel model)
+        public bool Update(BrainModel model)
         {
             _context.Set<BrainModel>().Update(model);
-            return await _context.SaveChangesAsync() > 0;
+            return _context.SaveChanges() > 0;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public bool Delete(Guid id)
         {
-            var entity = await _context.Set<BrainModel>().FindAsync(id);
+            var entity = this.GetById(id);
+
             if (entity == null) return false;
-            _context.Set<BrainModel>().Remove(entity);
-            return await _context.SaveChangesAsync() > 0;
+            _context.RemoveRange(entity.WeightsData);
+            _context.RemoveRange(entity.BiasesData);
+            _context.SaveChanges();
+            _context.Remove(entity);
+            return _context.SaveChanges() > 0;
         }
     }
 }

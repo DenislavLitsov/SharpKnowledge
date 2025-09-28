@@ -12,8 +12,8 @@ using SharpKnowledge.Data;
 namespace SharpKnowledge.Data.Migrations
 {
     [DbContext(typeof(PostgreContext))]
-    [Migration("20250921211912_initialMigration")]
-    partial class initialMigration
+    [Migration("20250928120424_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,9 @@ namespace SharpKnowledge.Data.Migrations
 
             modelBuilder.Entity("SharpKnowledge.Data.Models.BrainModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<float>("BestScore")
                         .HasColumnType("real");
@@ -61,13 +59,43 @@ namespace SharpKnowledge.Data.Migrations
                     b.Property<long>("TotalRuns")
                         .HasColumnType("bigint");
 
-                    b.Property<float[,,]>("Weights")
+                    b.HasKey("Id");
+
+                    b.ToTable("BrainModels");
+                });
+
+            modelBuilder.Entity("SharpKnowledge.Data.Models.Weight", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid?>("BrainModelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<float[,]>("WeightData")
                         .IsRequired()
                         .HasColumnType("real[]");
 
                     b.HasKey("Id");
 
-                    b.ToTable("BrainModels");
+                    b.HasIndex("BrainModelId");
+
+                    b.ToTable("Weight");
+                });
+
+            modelBuilder.Entity("SharpKnowledge.Data.Models.Weight", b =>
+                {
+                    b.HasOne("SharpKnowledge.Data.Models.BrainModel", null)
+                        .WithMany("WeightsCollection")
+                        .HasForeignKey("BrainModelId");
+                });
+
+            modelBuilder.Entity("SharpKnowledge.Data.Models.BrainModel", b =>
+                {
+                    b.Navigation("WeightsCollection");
                 });
 #pragma warning restore 612, 618
         }

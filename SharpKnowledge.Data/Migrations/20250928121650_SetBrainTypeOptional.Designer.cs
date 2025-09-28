@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SharpKnowledge.Data;
@@ -11,9 +12,11 @@ using SharpKnowledge.Data;
 namespace SharpKnowledge.Data.Migrations
 {
     [DbContext(typeof(PostgreContext))]
-    partial class PostgreContextModelSnapshot : ModelSnapshot
+    [Migration("20250928121650_SetBrainTypeOptional")]
+    partial class SetBrainTypeOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace SharpKnowledge.Data.Migrations
                         .IsRequired()
                         .HasColumnType("real[]");
 
-                    b.Property<Guid>("BrainModelId")
+                    b.Property<Guid?>("BrainModelId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -85,8 +88,12 @@ namespace SharpKnowledge.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("BrainModelId")
+                    b.Property<Guid?>("BrainModelId")
                         .HasColumnType("uuid");
+
+                    b.Property<float[,]>("WeightData")
+                        .IsRequired()
+                        .HasColumnType("real[]");
 
                     b.HasKey("Id");
 
@@ -95,53 +102,18 @@ namespace SharpKnowledge.Data.Migrations
                     b.ToTable("Weight");
                 });
 
-            modelBuilder.Entity("SharpKnowledge.Data.Models.WeightCol", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.PrimitiveCollection<float[]>("WeightData")
-                        .IsRequired()
-                        .HasColumnType("real[]");
-
-                    b.Property<int>("WeightId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WeightId");
-
-                    b.ToTable("WeightCol");
-                });
-
             modelBuilder.Entity("SharpKnowledge.Data.Models.Bias", b =>
                 {
                     b.HasOne("SharpKnowledge.Data.Models.BrainModel", null)
                         .WithMany("BiasesData")
-                        .HasForeignKey("BrainModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BrainModelId");
                 });
 
             modelBuilder.Entity("SharpKnowledge.Data.Models.Weight", b =>
                 {
                     b.HasOne("SharpKnowledge.Data.Models.BrainModel", null)
                         .WithMany("WeightsData")
-                        .HasForeignKey("BrainModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SharpKnowledge.Data.Models.WeightCol", b =>
-                {
-                    b.HasOne("SharpKnowledge.Data.Models.Weight", null)
-                        .WithMany("WeightData")
-                        .HasForeignKey("WeightId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BrainModelId");
                 });
 
             modelBuilder.Entity("SharpKnowledge.Data.Models.BrainModel", b =>
@@ -149,11 +121,6 @@ namespace SharpKnowledge.Data.Migrations
                     b.Navigation("BiasesData");
 
                     b.Navigation("WeightsData");
-                });
-
-            modelBuilder.Entity("SharpKnowledge.Data.Models.Weight", b =>
-                {
-                    b.Navigation("WeightData");
                 });
 #pragma warning restore 612, 618
         }

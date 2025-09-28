@@ -27,6 +27,25 @@ namespace SharpKnowledge.Knowledge.Utility
             this.Array = array;
         }
 
+        public ThreeDArray(float[,,] array)
+        {
+            int layers = array.GetLength(0);
+            int rows = array.GetLength(1);
+            int cols = array.GetLength(2);
+            this.Array = new float[layers][,];
+            for (int l = 0; l < layers; l++)
+            {
+                this.Array[l] = new float[rows, cols];
+                for (int r = 0; r < rows; r++)
+                {
+                    for (int c = 0; c < cols; c++)
+                    {
+                        this.Array[l][r, c] = array[l, r, c];
+                    }
+                }
+            }
+        }
+
         public ThreeDArray()
         {
         }

@@ -1,5 +1,6 @@
 ﻿using SharpKnowledge.Common;
 using SharpKnowledge.Common.RandomGenerators;
+using SharpKnowledge.Data.Models;
 using SharpKnowledge.Knowledge;
 using SharpKnowledge.Knowledge.Factories;
 using SharpKnowledge.Knowledge.IO;
@@ -15,7 +16,8 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
     public class SnakeCpuRandomStrengthEvolution : BaseSnakeClass<CpuBrain>
     {
         Random Random = new Random();
-        public SnakeCpuRandomStrengthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("SnakeAggressiveEvolition_400_100_50_4", teacher, brainEvolutioner, null, learningThreads)
+
+        public SnakeCpuRandomStrengthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_Snake_400_100_50_4", teacher, brainEvolutioner, null, learningThreads)
         {
         }
 
@@ -26,7 +28,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
 
             var rnd = Random.NextDouble();
 
-            if(rnd < 0.1f)
+            if (rnd < 0.1f)
             {
                 mutationChance = 0.50f;
                 mutationStrength = 1f;
@@ -54,11 +56,11 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
             return (mutationChance, mutationStrength);
         }
 
-        protected override SaveModel<CpuBrain> LoadInitialBrain()
+        protected override void LoadInitialBrain()
         {
-            var latestModel = new IO<CpuBrain>().LoadLatest(StaticVariables.DataPath, "Snake");
+            var latestModel = new IO().LoadLatestCpuBrain(this.className);
             CpuBrain mainBrain;
-            if (latestModel == null)
+            if (latestModel.cpuBrain == null)
             {
                 int[] columnsWithRows = { 400, 100, 50, 4 };
                 var factory = new NullBrainFactory(columnsWithRows);
@@ -66,12 +68,16 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
                 mainBrain.BestScore = -20;
                 Console.WriteLine("Created random initial brain");
 
-                return new SaveModel<CpuBrain>(mainBrain, "CPU BRAIN", 0);
+                this.loadedBrain = mainBrain;
+                this.loadedModel = new BrainModel();
+                this.loadedModel.Name = this.className;
             }
             else
             {
-                Console.WriteLine($"Loaded generation: {latestModel.Brain.Generation}, with description: {latestModel.Description}");
-                return latestModel;
+                this.loadedModel = latestModel.brainModel;
+                this.loadedBrain = latestModel.cpuBrain;
+
+                Console.WriteLine($"Loaded generation: {latestModel.brainModel.Generation}, with description: {latestModel.brainModel.Description}");
             }
         }
     }

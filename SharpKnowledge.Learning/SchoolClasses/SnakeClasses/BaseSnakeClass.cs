@@ -1,5 +1,6 @@
 ﻿using SharpKnowledge.Common;
 using SharpKnowledge.Common.RandomGenerators;
+using SharpKnowledge.Data.Models;
 using SharpKnowledge.Knowledge;
 using SharpKnowledge.Knowledge.Factories;
 using SharpKnowledge.Knowledge.IO;
@@ -17,11 +18,15 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
     {
         protected long iterationsSenseLastBetterGeneration = 0;
 
+        protected BrainModel loadedModel;
+
+        protected BaseBrain loadedBrain;
+
         public BaseSnakeClass(string className, BaseTeacher teacher, BrainEvolutioner brainEvolutioner, BaseBrain initialBrain, int learningThreads) : base(className, teacher, brainEvolutioner, initialBrain, learningThreads)
         {
         }
 
-        protected abstract SaveModel<BrainType> LoadInitialBrain();
+        protected abstract void LoadInitialBrain();
 
         protected abstract (float mutationChance, float mutationStrength) GetMutationStrength();
 
@@ -30,9 +35,10 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
             long totalRuns = 0;
             SnakeTeacher teacher = new SnakeTeacher(new RandomGeneratorFactory(true, 10000));
 
-            var loadedModel = LoadInitialBrain();
+            LoadInitialBrain();
             totalRuns = loadedModel.TotalRuns;
-            BrainType mainBrain = loadedModel.Brain;
+
+            BaseBrain mainBrain = this.initialBrain;
 
             float mutationChance = 0.1f;
             float mutationStrength = 0.05f;
@@ -78,7 +84,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
 
                     if (mainBrain.Generation % 1 == 0)
                     {
-                        this.SaveBrain(mainBrain, totalRuns, $"Best brain with score {mainBrain.BestScore}", StaticVariables.DataPath, className);
+                        this.SaveBrain(mainBrain, totalRuns, $"Best brain with score {mainBrain.BestScore}", className);
                     }
                 }
                 else
@@ -93,10 +99,9 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
             }
         }
 
-        protected void SaveBrain(BrainType brain, long totalRuns, string description, string dataPath, string gameName)
+        protected void SaveBrain(BaseBrain brain, long totalRuns, string description, string gameName)
         {
-            new IO<BrainType>().Save(brain, totalRuns, $"Best brain with score {brain.BestScore}", StaticVariables.DataPath, "Snake");
+            new IO().Save(brain, totalRuns, description, gameName);
         }
-
     }
 }

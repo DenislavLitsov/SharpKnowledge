@@ -25,9 +25,11 @@ class Program
         //var factory = new RandomBrainFactory(columnsWithRows);
         //Brain mainBrain = factory.GetBrain();
 
-        var latestModel = new IO<CpuBrain>().LoadLatest(StaticVariables.DataPath, "Snake");
+        var io = new IO();
+        var latest = io.GetLatestId("Snake");
+        var latestModel = io.LoadCpuBrain(latest);
 
-        GameLoop(latestModel.Brain);
+        GameLoop(latestModel.cpuBrain);
     }
 
     private static int GetMapSize(string prompt, int min, int max)

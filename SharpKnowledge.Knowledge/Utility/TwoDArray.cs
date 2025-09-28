@@ -22,6 +22,21 @@
             }
         }
 
+        public TwoDArray(float[,] values)
+        {
+            int rows = values.GetLength(0);
+            int cols = values.GetLength(1);
+            this.Array = new float[cols][];
+            for (int c = 0; c < cols; c++)
+            {
+                this.Array[c] = new float[rows];
+                for (int r = 0; r < rows; r++)
+                {
+                    this.Array[c][r] = values[c, r];
+                }
+            }
+        }
+
         public TwoDArray(float[][] array)
         {
             this.Array = array;
