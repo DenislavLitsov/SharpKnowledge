@@ -7,7 +7,7 @@ namespace SharpKnowledge.Data
 {
     public class PostgreContext : DbContext
     {
-        private static PostgreContext _context;
+        //private static PostgreContext _context;
         public DbSet<BrainModel> BrainModels { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -15,13 +15,17 @@ namespace SharpKnowledge.Data
 
         public static PostgreContext GetContext()
         {
-            if (_context == null)
-            {
-                _context = new PostgreContext();
-                _context.Database.EnsureCreated();
-            }
+            var res = new PostgreContext();
+            res.Database.EnsureCreated();
+
+            return res;
+            // if (_context == null)
+            // {
+            //     _context = new PostgreContext();
+            //     _context.Database.EnsureCreated();
+            // }
             
-            return _context;
+            // return _context;
         }
     }
 }

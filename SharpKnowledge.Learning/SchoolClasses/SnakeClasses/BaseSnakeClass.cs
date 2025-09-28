@@ -61,7 +61,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
                     return newBrains;
                 });
 
-                Console.WriteLine("Start teaching");
+                Console.WriteLine($"Start teaching brains total: {brains.Length}");
                 BrainType bestBrain = (BrainType)teacher.Teach(brains);
                 Console.WriteLine("Finished teach");
                 var cachedNewBrains = threadedFunction.WaitResult();

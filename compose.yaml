@@ -8,7 +8,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Release
       DB_CONNECTION_STRING: Server=host.docker.internal;port=5432;Database=AIModels;Username=AIModelsLogin;Password=asdfasdf
       DATA_PATH: data
-      AGGRESIVE_CPU_SNAKE_LEARNING_TOTAL_THREADS: 32
+      AGGRESIVE_CPU_SNAKE_LEARNING_TOTAL_THREADS: 1000
     volumes:
     - sharp-knowledge-learning:/app/data
 
