@@ -22,35 +22,6 @@ namespace SharpKnowledge.Knowledge.IO
 
         public void Save(BaseBrain baseBrain, long totalRuns, string description, string gameName)
         {
-
-            // float[][,] weightsArray = baseBrain.weights.Array;
-            // int layers = weightsArray.Length;
-            // int rows = weightsArray[0].GetLength(0);
-            // int cols = weightsArray[0].GetLength(1);
-
-            // float[,,] weights3D = new float[layers, rows, cols];
-            // for (int l = 0; l < layers; l++)
-            // {
-            //     for (int r = 0; r < rows; r++)
-            //     {
-            //         for (int c = 0; c < cols; c++)
-            //         {
-            //             weights3D[l, r, c] = weightsArray[l][r, c];
-            //         }
-            //     }
-            // }
-
-            // int rows2 = baseBrain.biases.Array.Length;
-            // int cols2 = baseBrain.biases.Array[0].Length;
-            // float[,] parsedBiases = new float[rows2, cols2];
-            // for (int i = 0; i < rows2; i++)
-            // {
-            //     for (int j = 0; j < cols2; j++)
-            //     {
-            //         parsedBiases[i, j] = baseBrain.biases.Array[i][j];
-            //     }
-            // }
-
             var brainModel = new Data.Models.BrainModel
             {
                 Name = gameName,

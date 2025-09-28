@@ -20,8 +20,6 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
 
         protected BrainModel loadedModel;
 
-        protected BaseBrain loadedBrain;
-
         public BaseSnakeClass(string className, BaseTeacher teacher, BrainEvolutioner brainEvolutioner, BaseBrain initialBrain, int learningThreads) : base(className, teacher, brainEvolutioner, initialBrain, learningThreads)
         {
         }

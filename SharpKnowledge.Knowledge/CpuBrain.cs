@@ -44,7 +44,7 @@ namespace SharpKnowledge.Knowledge
         public override CpuBrain Clone()
         {
             float[][,] newWeightsArray = new float[this.weights.Array.Length][,];
-            for (int col = 0; col < this.weights.Array.Length - 1; col++)
+            for (int col = 0; col < this.weights.Array.Length; col++)
             {
                 newWeightsArray[col] = new float[this.weights.Array[col].GetLength(0), this.weights.Array[col].GetLength(1)];
                 Array.Copy(this.weights.Array[col], newWeightsArray[col], this.weights.Array[col].Length);

@@ -53,6 +53,9 @@ namespace SharpKnowledge.Data.Models
             WeightsData = new List<Weight>();
             foreach (var weightData in weightsArray)
             {
+                if (weightData == null)
+                    continue;
+
                 var parsedWeightData = new List<WeightCol>();
                 for (int i = 0; i < weightData.GetLength(0); i++)
                 {

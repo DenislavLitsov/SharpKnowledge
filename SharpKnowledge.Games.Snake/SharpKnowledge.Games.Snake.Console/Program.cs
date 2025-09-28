@@ -26,7 +26,7 @@ class Program
         //Brain mainBrain = factory.GetBrain();
 
         var io = new IO();
-        var latest = io.GetLatestId("Snake");
+        var latest = io.GetLatestId("CPU_Snake_400_100_50_4");
         var latestModel = io.LoadCpuBrain(latest);
 
         GameLoop(latestModel.cpuBrain);

@@ -15,7 +15,7 @@ namespace SharpKnowledge.Learning.SchoolClasses
         protected readonly string className;
         protected readonly BaseTeacher teacher;
         protected readonly BrainEvolutioner brainEvolutioner;
-        protected readonly BaseBrain initialBrain;
+        protected BaseBrain initialBrain;
 
         public bool StopToken = false;
 

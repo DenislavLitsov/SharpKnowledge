@@ -26,11 +26,11 @@ namespace SharpKnowledge.Data.Services
             return _context.Set<BrainModel>().Where(b => b.Name == name).ToList();
         }
 
-        public BrainModel? GetBestFromName(string name)
-        {
-            var res = _context.Set<BrainModel>().Where(b => b.Name == name).OrderByDescending(x => x.BestScore).FirstOrDefault();
-            return res;
-        }
+        // public BrainModel? GetBestFromName(string name)
+        // {
+        //     var res = _context.Set<BrainModel>().Where(b => b.Name == name).OrderByDescending(x => x.BestScore).FirstOrDefault();
+        //     return res;
+        // }
 
         public BrainModel? GetById(Guid id)
         {
@@ -38,9 +38,24 @@ namespace SharpKnowledge.Data.Services
             if (res == null)
                 return null;
 
-            var biases = _context.Set<Bias>().Where(b => b.BrainModelId == id).ToList();
-            var weights = _context.Set<Weight>().Where(w => w.BrainModelId == id).ToList();
-            
+            var biases = _context.Set<Bias>().Where(b => b.BrainModelId == id)
+                .OrderBy(x => x.Id)
+                .ToList();
+
+            var weights = _context.Set<Weight>().Where(w => w.BrainModelId == id)
+                .OrderBy(x => x.Id)
+                .ToList();
+
+            foreach (var weight in weights)
+            {
+                var col = _context.Set<WeightCol>()
+                    .Where(wc => wc.WeightId == weight.Id).ToList()
+                    .OrderBy(x => x.Id)
+                    .ToList();
+                    
+                weight.WeightData = col;
+            }
+
             res.BiasesData = biases;
             res.WeightsData = weights;
 

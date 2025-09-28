@@ -68,14 +68,14 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
                 mainBrain.BestScore = -20;
                 Console.WriteLine("Created random initial brain");
 
-                this.loadedBrain = mainBrain;
+                this.initialBrain = mainBrain;
                 this.loadedModel = new BrainModel();
                 this.loadedModel.Name = this.className;
             }
             else
             {
                 this.loadedModel = latestModel.brainModel;
-                this.loadedBrain = latestModel.cpuBrain;
+                this.initialBrain = latestModel.cpuBrain;
 
                 Console.WriteLine($"Loaded generation: {latestModel.brainModel.Generation}, with description: {latestModel.brainModel.Description}");
             }
