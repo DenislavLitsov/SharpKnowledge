@@ -26,7 +26,13 @@ namespace SharpKnowledge.Learning
                 brainEvolutioner, 
                 EnvironmentManager.GetAggresiveCPUSnakeLearningTotalThreads());
 
+            var snakeClass2 = new SnakeCpuRandomStrengthEvolutionBigNeuralNetwork(
+                new SnakeTeacher(new RandomGeneratorFactory(true, 10000)), 
+                brainEvolutioner, 
+                EnvironmentManager.GetAggresiveCPUSnakeBigLearningTotalThreads());
+
             cpuClasses.Add(snakeClass);
+            cpuClasses.Add(snakeClass2);
             
             List<Thread> threads = new List<Thread>();
             foreach (var schoolClass in cpuClasses)

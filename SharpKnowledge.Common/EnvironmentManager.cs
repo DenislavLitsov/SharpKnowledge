@@ -9,7 +9,7 @@ public static class EnvironmentManager
         var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
         if (string.IsNullOrEmpty(connectionString))
         {
-            connectionString = "Host=localhost;Database=AiModels_Testing;Username=AIModelsLogin;Password=asdfasdf";
+            connectionString = "Server=localhost;port=5432;Database=AIModels;Username=AIModelsLogin;Password=asdfasdf";
             System.Console.WriteLine($"No environment variable for DB_CONNECTION_STRING found, using default connection string: {connectionString}");
         }
 
@@ -36,6 +36,19 @@ public static class EnvironmentManager
         {
             totalThreads = 500;
             System.Console.WriteLine($"No environment variable for AGGRESIVE_CPU_SNAKE_LEARNING_TOTAL_THREADS found or invalid, using default value: {totalThreads}");
+        }
+
+        return totalThreads;
+    }
+
+    public static int GetAggresiveCPUSnakeBigLearningTotalThreads()
+    {
+        var totalThreadsString = Environment.GetEnvironmentVariable("AGGRESIVE_CPU_SNAKE_BIG_LEARNING_TOTAL_THREADS");
+        int totalThreads;
+        if (string.IsNullOrEmpty(totalThreadsString) || !int.TryParse(totalThreadsString, out totalThreads))
+        {
+            totalThreads = 500;
+            System.Console.WriteLine($"No environment variable for AGGRESIVE_CPU_SNAKE_BIG_LEARNING_TOTAL_THREADS found or invalid, using default value: {totalThreads}");
         }
 
         return totalThreads;

@@ -118,8 +118,15 @@ public class SnakeGame : BaseGame
         };
 
         // Check for collisions
-        if (IsWallCollision(newHead) || IsSnakeCollision(newHead))
+        if (IsWallCollision(newHead))
         {
+            _gameState = GameState.GameOver;
+            GameStateChanged?.Invoke(this, _gameState);
+            return false;
+        }
+        else if(IsSnakeCollision(newHead))
+        {
+            _score -= 15;
             _gameState = GameState.GameOver;
             GameStateChanged?.Invoke(this, _gameState);
             return false;

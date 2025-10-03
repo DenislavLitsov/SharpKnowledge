@@ -1,4 +1,4 @@
-﻿using SharpKnowledge.Common;
+using SharpKnowledge.Common;
 using SharpKnowledge.Common.RandomGenerators;
 using SharpKnowledge.Data.Models;
 using SharpKnowledge.Knowledge;
@@ -11,15 +11,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
+namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses;
+
+public class SnakeCpuRandomStrengthEvolutionBigNeuralNetwork: BaseSnakeClass<CpuBrain>
 {
-    public class SnakeCpuRandomStrengthEvolution : BaseSnakeClass<CpuBrain>
-    {
         Random Random = new Random();
 
-        public SnakeCpuRandomStrengthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_Snake_400_100_50_4", teacher, brainEvolutioner, null, learningThreads)
+        public SnakeCpuRandomStrengthEvolutionBigNeuralNetwork(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_Snake_400_400_300_4", teacher, brainEvolutioner, null, learningThreads)
         {
-            System.Console.WriteLine($"Create {nameof(SnakeCpuRandomStrengthEvolution)} with {learningThreads} learning threads");
+            System.Console.WriteLine($"Create {nameof(SnakeCpuRandomStrengthEvolutionBigNeuralNetwork)} with {learningThreads} learning threads");
         }
 
         protected override (float mutationChance, float mutationStrength) GetMutationStrength()
@@ -69,7 +69,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
             CpuBrain mainBrain;
             if (latestModel.cpuBrain == null)
             {
-                int[] columnsWithRows = { 400, 100, 50, 4 };
+                int[] columnsWithRows = { 400, 400, 300, 4 };
                 var factory = new NullBrainFactory(columnsWithRows);
                 mainBrain = factory.GetCpuBrain();
                 mainBrain.BestScore = -20;
@@ -87,5 +87,4 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
                 Console.WriteLine($"Loaded generation: {latestModel.brainModel.Generation}, with description: {latestModel.brainModel.Description}");
             }
         }
-    }
 }

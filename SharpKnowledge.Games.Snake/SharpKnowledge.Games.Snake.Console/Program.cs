@@ -25,7 +25,8 @@ class Program
         //Brain mainBrain = factory.GetBrain();
 
         var io = new IO();
-        var latest = io.GetLatestId("CPU_Snake_400_100_50_4");
+        var latest = io.GetLatestId("CPU_Snake_400_400_300_4");
+        //var latest = io.GetLatestId("CPU_Snake_400_100_50_4");
         var latestModel = io.LoadCpuBrain(latest);
 
         GameLoop(latestModel.cpuBrain);
@@ -54,23 +55,29 @@ class Program
 
         while (_gameRunning && frameCount < maxFrames)
         {
+            float[] output = null;
+
             lock (_lockObject)
             {
                 if (_game!.GameState == GameState.Playing)
                 {
                     _game.GetBrainInputs();
-                    var outPut = mainBrain.CalculateOutputs(_game.GetBrainInputs());
-                    _game.Update(outPut);
+                    output = mainBrain.CalculateOutputs(_game.GetBrainInputs());
+                    _game.Update(output);
                 }
             }
 
             RenderGame();
+            foreach (var item in output)
+            {
+                System.Console.WriteLine(item);
+            }
 
             if (_game.GameState == GameState.GameOver)
             {
-                System.Console.SetCursorPosition(0, _game.Height + 4);
                 System.Console.WriteLine("GAME OVER! Press R to restart or ESC to quit.");
                 
+                break;
                 if (System.Console.IsInputRedirected)
                 {
                     break; // Exit in test mode

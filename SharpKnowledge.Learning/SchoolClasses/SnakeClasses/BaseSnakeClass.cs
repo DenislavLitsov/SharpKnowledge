@@ -30,6 +30,9 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
 
         protected override void MainRun()
         {
+            if (this.learningThreads == 0)
+                return;
+
             long totalRuns = 0;
 
             LoadInitialBrain();
