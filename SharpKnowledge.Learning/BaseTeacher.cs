@@ -38,6 +38,14 @@ namespace SharpKnowledge.Learning
             return bestBrain;
         }
 
+        public BaseBrain EvaluateBrain(BaseBrain brain)
+        {
+            var student = new Student(brain, this.InitializeNewGame());
+            var thread = student.StartPlayingUntilGameOver();
+            thread.Join();
+            return student.Brain;
+        }
+
         protected abstract BaseGame InitializeNewGame();
     }
 }

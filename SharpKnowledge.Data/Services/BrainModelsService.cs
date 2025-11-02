@@ -64,7 +64,11 @@ namespace SharpKnowledge.Data.Services
 
         public Guid GetBestScore(string name)
         {
-            var res = _context.Set<BrainModel>().Where(b => b.Name == name).OrderByDescending(x => x.BestScore).FirstOrDefault();
+            var res = _context.Set<BrainModel>().Where(b => b.Name == name)
+                .OrderByDescending(x => x.BestScore)
+                .ThenBy(x => x.SecondScoreValue)
+                .FirstOrDefault();
+                
             if (res == null) return Guid.Empty;
 
             return res.Id;

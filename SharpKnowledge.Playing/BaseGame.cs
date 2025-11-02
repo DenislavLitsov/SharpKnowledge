@@ -9,11 +9,10 @@
         public abstract void Initialize();
 
         /// <summary>
-        /// Returns false if game is over
         /// </summary>
         /// <param name="takenDecision"></param>
         /// <returns></returns>
-        public abstract bool Update(float[] takenDecisions);
+        public abstract GameResult Update(float[] takenDecisions);
 
         public abstract float GetScore();
 

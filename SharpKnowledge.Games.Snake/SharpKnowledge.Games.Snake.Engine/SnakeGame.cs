@@ -76,10 +76,10 @@ public class SnakeGame : BaseGame
                (direction1 == Direction.Right && direction2 == Direction.Left);
     }
 
-    public override bool Update(float[] takenDecisions)
+    public override GameResult Update(float[] takenDecisions)
     {
         if (_gameState != GameState.Playing)
-            return false;
+            return GameResult.GameOver;
 
         // Map takenDecision (0 to 1) to Direction
         int index = Array.IndexOf(takenDecisions, takenDecisions.Max());
@@ -122,14 +122,14 @@ public class SnakeGame : BaseGame
         {
             _gameState = GameState.GameOver;
             GameStateChanged?.Invoke(this, _gameState);
-            return false;
+            return GameResult.GameOver;
         }
         else if(IsSnakeCollision(newHead))
         {
             _score -= 15;
             _gameState = GameState.GameOver;
             GameStateChanged?.Invoke(this, _gameState);
-            return false;
+            return GameResult.GameOver;
         }
 
         // Add new head
@@ -152,12 +152,12 @@ public class SnakeGame : BaseGame
             if (_totalMovesSenseLastEat >= 500)
             {
                 this._score = int.MinValue;
-                return false;
+                return GameResult.GameOver;
             }
         }
 
         UpdateMap();
-        return true;
+        return GameResult.Continue;
     }
 
     private void UpdateMap()

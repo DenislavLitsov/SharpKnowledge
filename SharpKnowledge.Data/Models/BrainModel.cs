@@ -11,6 +11,7 @@ namespace SharpKnowledge.Data.Models
 
             this.WeightsData = new HashSet<Weight>();
             this.BiasesData = new HashSet<Bias>();
+            this.SecondScoreValue = float.MaxValue;
         }
 
         [Key]
@@ -22,6 +23,7 @@ namespace SharpKnowledge.Data.Models
         public long TotalRuns { get; set; }
         public int Generation { get; set; }
         public float BestScore { get; set; }
+        public float SecondScoreValue { get; set; }
 
         //public float[][,] Weights { get; set; }
         //public float[,] Biases { get; set; }

@@ -30,18 +30,17 @@ namespace SharpKnowledge.Learning
         protected void PlayUntilGameOver()
         {
             this.baseGame.Initialize();
-            bool isGameOver = false;
+            GameResult isGameOver = GameResult.Continue;
             int totalUpdates = 0;
-            while (!isGameOver)
+            while (isGameOver == GameResult.Continue)
             {
                 float[] inputs = this.baseGame.GetBrainInputs();
                 float[] outputs = this.brain.CalculateOutputs(inputs);
-                isGameOver = !this.baseGame.Update(outputs);
+                isGameOver = this.baseGame.Update(outputs);
                 totalUpdates++;
             }
 
             this.brain.BestScore = this.baseGame.GetScore();
-            //Console.WriteLine($"Best score: {this.brain.BestScore}, updates: {totalUpdates}");
         }
     }
 }

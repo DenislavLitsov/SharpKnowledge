@@ -20,7 +20,9 @@ namespace SharpKnowledge.Knowledge
 
         public float BestScore = 0;
 
-        public BaseBrain(ThreeDArray weights, TwoDArray biases, int generation = 0, float bestScore = 0)
+        public float SecondScoreValue = 0;
+
+        public BaseBrain(ThreeDArray weights, TwoDArray biases, int generation = 0, float bestScore = 0, float secondScoreValue = float.MaxValue)
         {
             this.weights = weights;
             this.biases = biases;
@@ -35,6 +37,7 @@ namespace SharpKnowledge.Knowledge
 
             this.Generation = generation;
             this.BestScore = bestScore;
+            this.SecondScoreValue = secondScoreValue;
         }
 
         public float[] CalculateOutputs(float[] inputs)

@@ -76,8 +76,6 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
                 iterationsSenseLastBetterGeneration++;
 
                 if (mainBrain.BestScore < bestBrain.BestScore)
-                // ||
-                // (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration > 10000))
                 {
                     iterationsSenseLastBetterGeneration = 0;
                     mainBrain = bestBrain;
@@ -88,6 +86,10 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
                     {
                         this.SaveBrain(mainBrain, totalRuns, $"Best brain with score {mainBrain.BestScore}", className);
                     }
+                }
+                else if (mainBrain.BestScore == bestBrain.BestScore)
+                {
+                    
                 }
                 else
                 {
