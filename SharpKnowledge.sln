@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpKnowledge.Knowledge", "SharpKnowledge.Knowledge\SharpKnowledge.Knowledge.csproj", "{45C09EF1-6591-443D-919A-E4083018ED66}"
 EndProject
@@ -40,6 +40,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpKnowledge.Games.TicTacToe.Console", "SharpKnowledge.Games.TicTacToe.Console\SharpKnowledge.Games.TicTacToe.Console.csproj", "{11D0E321-FF1E-4567-83E0-3AD539ADF75C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpKnowledge.Games.TicTacToe.Engine", "SharpKnowledge.Games.TicTacToe.Engine\SharpKnowledge.Games.TicTacToe.Engine.csproj", "{9D4EE504-4EF8-4981-B483-327AF91D1C61}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FlappyBird", "FlappyBird", "{59AE9954-D926-43E7-971C-745AC8018FD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpKnowledge.Games.FlappyBird.Engine", "SharpKnowledge.Games.FlappyBird.Engine\SharpKnowledge.Games.FlappyBird.Engine.csproj", "{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpKnowledge.Games.FlappyBird.Console", "SharpKnowledge.Games.FlappyBird.Console\SharpKnowledge.Games.FlappyBird.Console.csproj", "{E26097E7-F1D6-48AC-A847-99B6B4872B9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -207,6 +213,30 @@ Global
 		{9D4EE504-4EF8-4981-B483-327AF91D1C61}.Release|x64.Build.0 = Release|Any CPU
 		{9D4EE504-4EF8-4981-B483-327AF91D1C61}.Release|x86.ActiveCfg = Release|Any CPU
 		{9D4EE504-4EF8-4981-B483-327AF91D1C61}.Release|x86.Build.0 = Release|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Debug|x64.Build.0 = Debug|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Debug|x86.Build.0 = Debug|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Release|x64.ActiveCfg = Release|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Release|x64.Build.0 = Release|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Release|x86.ActiveCfg = Release|Any CPU
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C}.Release|x86.Build.0 = Release|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Debug|x64.Build.0 = Debug|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Debug|x86.Build.0 = Debug|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Release|x64.ActiveCfg = Release|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Release|x64.Build.0 = Release|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Release|x86.ActiveCfg = Release|Any CPU
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -228,6 +258,9 @@ Global
 		{A7D82DF1-58FF-437B-9F80-739068CA4944} = {6476AC3E-C33B-444E-B38F-B153168CF30F}
 		{11D0E321-FF1E-4567-83E0-3AD539ADF75C} = {A7D82DF1-58FF-437B-9F80-739068CA4944}
 		{9D4EE504-4EF8-4981-B483-327AF91D1C61} = {A7D82DF1-58FF-437B-9F80-739068CA4944}
+		{59AE9954-D926-43E7-971C-745AC8018FD8} = {6476AC3E-C33B-444E-B38F-B153168CF30F}
+		{6478E552-B6EB-46E9-8FB8-1DF6B5255F6C} = {59AE9954-D926-43E7-971C-745AC8018FD8}
+		{E26097E7-F1D6-48AC-A847-99B6B4872B9E} = {59AE9954-D926-43E7-971C-745AC8018FD8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F400C2D-0A9A-477E-B821-DD8B62BB5754}
