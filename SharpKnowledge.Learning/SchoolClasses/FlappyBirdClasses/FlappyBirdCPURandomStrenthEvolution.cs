@@ -1,10 +1,9 @@
-﻿using SharpKnowledge.Common;
-using SharpKnowledge.Common.RandomGenerators;
-using SharpKnowledge.Data.Models;
+﻿using SharpKnowledge.Data.Models;
 using SharpKnowledge.Knowledge;
 using SharpKnowledge.Knowledge.Factories;
 using SharpKnowledge.Knowledge.IO;
 using SharpKnowledge.Learning.BrainManagers;
+using SharpKnowledge.Learning.SchoolClasses.SnakeClasses;
 using SharpKnowledge.Learning.Teachers;
 using System;
 using System.Collections.Generic;
@@ -12,15 +11,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
+namespace SharpKnowledge.Learning.SchoolClasses.FlappyBirdClasses
 {
-    public class SnakeCpuRandomStrengthEvolution : BaseSnakeClass<CpuBrain>
+    public class FlappyBirdCPURandomStrenthEvolution : BaseFlappyBirdClass<CpuBrain>
     {
         Random Random = new Random();
 
-        public SnakeCpuRandomStrengthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_Snake_400_100_50_4", teacher, brainEvolutioner, null, learningThreads)
+        public FlappyBirdCPURandomStrenthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_FlappyBird_5_50_50_25_1", teacher, brainEvolutioner, null, learningThreads)
         {
-            System.Console.WriteLine($"Create {nameof(SnakeCpuRandomStrengthEvolution)} with {learningThreads} learning threads");
+            System.Console.WriteLine($"Create {nameof(FlappyBirdCPURandomStrenthEvolution)} with {learningThreads} learning threads");
         }
 
         protected override (float mutationChance, float mutationStrength) GetMutationStrength()
@@ -70,7 +69,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
             CpuBrain mainBrain;
             if (latestModel.cpuBrain == null)
             {
-                int[] columnsWithRows = { 400, 100, 50, 4 };
+                int[] columnsWithRows = { 5, 50, 50, 25, 1 };
                 var factory = new NullBrainFactory(columnsWithRows);
                 mainBrain = factory.GetCpuBrain();
                 mainBrain.BestScore = -20;

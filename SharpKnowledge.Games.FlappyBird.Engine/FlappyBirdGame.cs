@@ -75,7 +75,7 @@ namespace SharpKnowledge.Games.FlappyBird.Engine
                 this.nextPipeTick += pipeXGap;
             }
 
-            if (takenDecisions[0] == 1)
+            if (takenDecisions[0] > 0.5f)
             {
                 this.birdYSpeed += jumpStrength;
             }

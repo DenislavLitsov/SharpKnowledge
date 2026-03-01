@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharpKnowledge.Games.FlappyBird.Engine\SharpKnowledge.Games.FlappyBird.Engine.csproj" />
+    <ProjectReference Include="..\SharpKnowledge.Knowledge\SharpKnowledge.Knowledge.csproj" />
   </ItemGroup>
 
 </Project>

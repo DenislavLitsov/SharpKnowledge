@@ -2,7 +2,7 @@
 using SharpKnowledge.Games.Snake.Engine;
 using SharpKnowledge.Playing;
 
-namespace SharpKnowledge.Learning
+namespace SharpKnowledge.Learning.Teachers
 {
     public class SnakeTeacher : BaseTeacher
     {

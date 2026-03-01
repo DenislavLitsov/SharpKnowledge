@@ -1,8 +1,6 @@
 ﻿using SharpKnowledge.Common;
-using SharpKnowledge.Common.RandomGenerators;
 using SharpKnowledge.Data.Models;
 using SharpKnowledge.Knowledge;
-using SharpKnowledge.Knowledge.Factories;
 using SharpKnowledge.Knowledge.IO;
 using SharpKnowledge.Learning.BrainManagers;
 using SharpKnowledge.Learning.Teachers;
@@ -13,15 +11,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
+namespace SharpKnowledge.Learning.SchoolClasses.FlappyBirdClasses
 {
-    public abstract class BaseSnakeClass<BrainType> : BaseSchoolClass<BrainType> where BrainType : BaseBrain
+    public abstract class BaseFlappyBirdClass<BrainType> : BaseSchoolClass<BrainType> where BrainType : BaseBrain
     {
         protected long iterationsSenseLastBetterGeneration = 0;
 
         protected BrainModel loadedModel;
 
-        public BaseSnakeClass(string className, BaseTeacher teacher, BrainEvolutioner brainEvolutioner, BaseBrain initialBrain, int learningThreads) : base(className, teacher, brainEvolutioner, initialBrain, learningThreads)
+        protected BaseFlappyBirdClass(string className, BaseTeacher teacher, BrainEvolutioner brainEvolutioner, BaseBrain initialBrain, int learningThreads) : base(className, teacher, brainEvolutioner, initialBrain, learningThreads)
         {
         }
 
@@ -90,7 +88,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
                 }
                 else if (mainBrain.BestScore == bestBrain.BestScore)
                 {
-                    
+
                 }
                 else
                 {

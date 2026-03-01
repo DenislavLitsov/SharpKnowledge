@@ -3,12 +3,20 @@
     using System;
     using System.Runtime.CompilerServices;
     using SharpKnowledge.Games.FlappyBird.Engine;
+    using SharpKnowledge.Knowledge.IO;
     using SharpKnowledge.Playing;
 
     internal class Program
     {
         static void Main(string[] args)
         {
+            var modeHuman = false;
+
+            var io = new IO();
+            var latest = io.GetLatestId("CPU_FlappyBird_5_50_50_25_1");
+            //var latest = io.GetLatestId("CPU_Snake_400_100_50_4");
+            var latestModel = io.LoadCpuBrain(latest);
+
             FlappyBirdGame game = new FlappyBirdGame(new SharpKnowledge.Common.RandomGenerators.RandomGeneratorFactory(true, 10_000).GetRandomGenerator());
             while (true)
             {
@@ -21,38 +29,49 @@
 
                 var map = game.GetMap();
                 var birdLocation = game.GetBirdLocation();
-                for (int y = 0; y < map.GetLength(0); y++)
+                if (game.GetScore() > 0)
                 {
-                    for (int x = 0; x < map.GetLength(1); x++)
+                    for (int y = 0; y < map.GetLength(0); y++)
                     {
-                        if (map[y, x] == 1)
+                        for (int x = 0; x < map.GetLength(1); x++)
                         {
-                            Console.Write("#");
+                            if (map[y, x] == 1)
+                            {
+                                Console.Write("#");
+                            }
+                            else if (x == birdLocation[0] && y == birdLocation[1])
+                            {
+                                Console.Write("O");
+                            }
+                            else
+                            {
+                                Console.Write(" ");
+                            }
                         }
-                        else if (x == birdLocation[0] && y == birdLocation[1])
-                        {
-                            Console.Write("O");
-                        }
-                        else
-                        {
-                            Console.Write(" ");
-                        }
+                        Console.WriteLine();
                     }
-                    Console.WriteLine();
                 }
 
-                game.GetBrainInputs();
-
-                var key = Console.ReadKey(true);
                 GameResult result;
-
-                if (key.Key == ConsoleKey.Spacebar)
+                if (modeHuman)
                 {
-                    result = game.Update(new float[] { 1 });
+                    var key = Console.ReadKey(true);
+
+                    if (key.Key == ConsoleKey.Spacebar)
+                    {
+                        result = game.Update(new float[] { 1 });
+                    }
+                    else
+                    {
+                        result = game.Update(new float[] { 0 });
+                    }
                 }
                 else
                 {
-                    result = game.Update(new float[] { 0 });
+                    var decisions = latestModel.cpuBrain.CalculateOutputs(game.GetBrainInputs());
+                    result = game.Update(decisions);
+
+                    //System.Threading.Thread.Sleep(50);
                 }
 
                 if (result == GameResult.GameOver)

@@ -1,5 +1,6 @@
 ﻿using SharpKnowledge.Knowledge;
 using SharpKnowledge.Learning.BrainManagers;
+using SharpKnowledge.Learning.Teachers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

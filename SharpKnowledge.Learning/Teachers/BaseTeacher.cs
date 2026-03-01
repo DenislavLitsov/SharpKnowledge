@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpKnowledge.Learning
+namespace SharpKnowledge.Learning.Teachers
 {
     public abstract class BaseTeacher
     {

@@ -53,4 +53,17 @@ public static class EnvironmentManager
 
         return totalThreads;
     }
+
+    public static int GetAggresiveCPUFlappyBirdBigLearningTotalThreads()
+    {
+        var totalThreadsString = Environment.GetEnvironmentVariable("AGGRESIVE_CPU_FlappyBird_BIG_LEARNING_TOTAL_THREADS");
+        int totalThreads;
+        if (string.IsNullOrEmpty(totalThreadsString) || !int.TryParse(totalThreadsString, out totalThreads))
+        {
+            totalThreads = 5000;
+            System.Console.WriteLine($"No environment variable for AGGRESIVE_CPU_FlappyBird_BIG_LEARNING_TOTAL_THREADS found or invalid, using default value: {totalThreads}");
+        }
+
+        return totalThreads;
+    }
 }

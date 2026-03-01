@@ -5,7 +5,9 @@ using SharpKnowledge.Knowledge.Factories;
 using SharpKnowledge.Knowledge.IO;
 using SharpKnowledge.Learning.BrainManagers;
 using SharpKnowledge.Learning.SchoolClasses;
+using SharpKnowledge.Learning.SchoolClasses.FlappyBirdClasses;
 using SharpKnowledge.Learning.SchoolClasses.SnakeClasses;
+using SharpKnowledge.Learning.Teachers;
 using System.Diagnostics;
 
 namespace SharpKnowledge.Learning
@@ -31,9 +33,16 @@ namespace SharpKnowledge.Learning
                 brainEvolutioner, 
                 EnvironmentManager.GetAggresiveCPUSnakeBigLearningTotalThreads());
 
-            cpuClasses.Add(snakeClass);
-            cpuClasses.Add(snakeClass2);
-            
+
+            var flappyBird1 = new FlappyBirdCPURandomStrenthEvolution(
+                new FlappyBirdTeacher(new RandomGeneratorFactory(true, 10000)),
+                brainEvolutioner,
+                EnvironmentManager.GetAggresiveCPUFlappyBirdBigLearningTotalThreads());
+
+            //cpuClasses.Add(snakeClass);
+            //cpuClasses.Add(snakeClass2);
+            cpuClasses.Add(flappyBird1);
+
             List<Thread> threads = new List<Thread>();
             foreach (var schoolClass in cpuClasses)
             {
