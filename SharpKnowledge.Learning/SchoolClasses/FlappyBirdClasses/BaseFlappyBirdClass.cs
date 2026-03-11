@@ -86,9 +86,18 @@ namespace SharpKnowledge.Learning.SchoolClasses.FlappyBirdClasses
                         this.SaveBrain(mainBrain, totalRuns, $"Best brain with score {mainBrain.BestScore}", className);
                     }
                 }
-                else if (mainBrain.BestScore == bestBrain.BestScore)
+                else if (mainBrain.BestScore == bestBrain.BestScore && iterationsSenseLastBetterGeneration >= 200)
                 {
+                    iterationsSenseLastBetterGeneration = 0;
+                    mainBrain = bestBrain;
+                    brains = brainEvolutioner.EvolveBrain(mainBrain, learningThreads, mutationChance, mutationStrength);
+                    Console.WriteLine($"Replaced brain");
+                    Console.WriteLine($"Best score: {mainBrain.BestScore}, Generation: {mainBrain.Generation}");
 
+                    if (mainBrain.Generation % 1 == 0)
+                    {
+                        this.SaveBrain(mainBrain, totalRuns, $"Replaced brain with: Best brain with score {mainBrain.BestScore}", className);
+                    }
                 }
                 else
                 {

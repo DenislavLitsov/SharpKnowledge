@@ -17,7 +17,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.FlappyBirdClasses
     {
         Random Random = new Random();
 
-        public FlappyBirdCPURandomStrenthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_FlappyBird_5_50_50_25_1", teacher, brainEvolutioner, null, learningThreads)
+        public FlappyBirdCPURandomStrenthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_FlappyBird_7_70_70_25_1", teacher, brainEvolutioner, null, learningThreads)
         {
             System.Console.WriteLine($"Create {nameof(FlappyBirdCPURandomStrenthEvolution)} with {learningThreads} learning threads");
         }
@@ -69,7 +69,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.FlappyBirdClasses
             CpuBrain mainBrain;
             if (latestModel.cpuBrain == null)
             {
-                int[] columnsWithRows = { 5, 50, 50, 25, 1 };
+                int[] columnsWithRows = { 7, 70, 70, 25, 1 };
                 var factory = new NullBrainFactory(columnsWithRows);
                 mainBrain = factory.GetCpuBrain();
                 mainBrain.BestScore = -20;

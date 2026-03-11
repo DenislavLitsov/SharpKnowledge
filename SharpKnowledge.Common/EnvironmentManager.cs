@@ -47,7 +47,7 @@ public static class EnvironmentManager
         int totalThreads;
         if (string.IsNullOrEmpty(totalThreadsString) || !int.TryParse(totalThreadsString, out totalThreads))
         {
-            totalThreads = 500;
+            totalThreads = 50;
             System.Console.WriteLine($"No environment variable for AGGRESIVE_CPU_SNAKE_BIG_LEARNING_TOTAL_THREADS found or invalid, using default value: {totalThreads}");
         }
 

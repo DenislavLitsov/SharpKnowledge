@@ -40,8 +40,8 @@ namespace SharpKnowledge.Learning
                 EnvironmentManager.GetAggresiveCPUFlappyBirdBigLearningTotalThreads());
 
             //cpuClasses.Add(snakeClass);
-            //cpuClasses.Add(snakeClass2);
-            cpuClasses.Add(flappyBird1);
+            cpuClasses.Add(snakeClass2);
+            //cpuClasses.Add(flappyBird1);
 
             List<Thread> threads = new List<Thread>();
             foreach (var schoolClass in cpuClasses)

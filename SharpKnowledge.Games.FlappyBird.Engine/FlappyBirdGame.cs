@@ -37,24 +37,26 @@ namespace SharpKnowledge.Games.FlappyBird.Engine
 
         public override float[] GetBrainInputs()
         {
-            float[] result = new float[5];
-
-            float distanceFromBirdToNextPipe = 
+            float[] result = new float[7];
 
             result[0] = this.birdY;
             result[1] = this.birdYSpeed;
-            result[2] = this.CalculateDistanceToNextPipe(); 
-            
+            result[2] = this.CalculateDistanceToNextPipe();
+
             var gapInfo = this.CalculateNextPipeGap();
-            result[3] = gapInfo.gapStart;
-            result[4] = gapInfo.gapEnd;
+            result[3] = gapInfo.gapStart == -1 ? ySize : gapInfo.gapStart;
+            result[4] = gapInfo.gapEnd == -1 ? ySize : gapInfo.gapEnd;
+
+            var gapInfo2 = this.CalculateSecondPipeGap();
+            result[5] = gapInfo2.gapStart == -1 ? ySize : gapInfo2.gapStart;
+            result[6] = gapInfo2.gapEnd == -1 ? ySize : gapInfo2.gapEnd;
 
             return result;
         }
 
         public override float GetScore()
         {
-            return this.currentTick;
+            return this.currentTick + this.birdY;
         }
 
         public override void Initialize()
@@ -63,6 +65,11 @@ namespace SharpKnowledge.Games.FlappyBird.Engine
 
         public override GameResult Update(float[] takenDecisions)
         {
+            if (this.currentTick >= 100000)
+            {
+                return GameResult.GameOver;
+            }
+
             this.MovePipes();
             if (this.CheckCollision())
             {
@@ -186,6 +193,67 @@ namespace SharpKnowledge.Games.FlappyBird.Engine
             for (int y = 0; y < ySize; y++)
             {
                 if (this.map[y, pipeX] == 0)
+                {
+                    if (gapStart == -1)
+                    {
+                        gapStart = y;
+                    }
+                    gapEnd = y;
+                }
+            }
+
+            return (gapStart, gapEnd);
+        }
+
+        private (float gapStart, float gapEnd) CalculateSecondPipeGap()
+        {
+            int firstPipeX = -1;
+            int secondPipeX = -1;
+
+            // Find the X position of the next pipe
+            for (int x = this.birdX; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    if (this.map[y, x] == 1)
+                    {
+                        firstPipeX = x;
+                        break;
+                    }
+                }
+                if (firstPipeX != -1) break;
+            }
+
+            // Find the X position of the second pipe
+            if (firstPipeX != -1)
+            {
+                for (int x = firstPipeX + 1; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        if (this.map[y, x] == 1)
+                        {
+                            secondPipeX = x;
+                            break;
+                        }
+                    }
+                    if (secondPipeX != -1) break;
+                }
+            }
+
+            // No second pipe found
+            if (secondPipeX == -1)
+            {
+                return (0, ySize);
+            }
+
+            // Find the gap in that pipe column
+            int gapStart = -1;
+            int gapEnd = -1;
+
+            for (int y = 0; y < ySize; y++)
+            {
+                if (this.map[y, secondPipeX] == 0)
                 {
                     if (gapStart == -1)
                     {

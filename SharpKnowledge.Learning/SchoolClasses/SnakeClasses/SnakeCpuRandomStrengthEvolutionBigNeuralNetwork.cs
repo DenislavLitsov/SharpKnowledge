@@ -70,7 +70,7 @@ public class SnakeCpuRandomStrengthEvolutionBigNeuralNetwork: BaseSnakeClass<Cpu
             CpuBrain mainBrain;
             if (latestModel.cpuBrain == null)
             {
-                int[] columnsWithRows = { 400, 400, 300, 4 };
+                int[] columnsWithRows = { 400, 4000, 4000, 200, 4 };
                 var factory = new NullBrainFactory(columnsWithRows);
                 mainBrain = factory.GetCpuBrain();
                 mainBrain.BestScore = -20;

@@ -13,7 +13,7 @@
             var modeHuman = false;
 
             var io = new IO();
-            var latest = io.GetLatestId("CPU_FlappyBird_5_50_50_25_1");
+            var latest = io.GetLatestId("CPU_FlappyBird_7_70_70_25_1");
             //var latest = io.GetLatestId("CPU_Snake_400_100_50_4");
             var latestModel = io.LoadCpuBrain(latest);
 
@@ -71,7 +71,7 @@
                     var decisions = latestModel.cpuBrain.CalculateOutputs(game.GetBrainInputs());
                     result = game.Update(decisions);
 
-                    //System.Threading.Thread.Sleep(50);
+                    System.Threading.Thread.Sleep(50);
                 }
 
                 if (result == GameResult.GameOver)
