@@ -1,4 +1,5 @@
-﻿using ILGPU;
+using ILGPU;
+using ILGPU.Algorithms;
 using ILGPU.Runtime;
 using ILGPU.Runtime.Cuda;
 using SharpKnowledge.Common;
@@ -14,10 +15,25 @@ namespace SharpKnowledge.Knowledge
 {
     public class GpuBrain : BaseBrain
     {
+        private static readonly object _gpuInitLock = new();
+        private static Context? _sharedContext;
+        private static Accelerator? _sharedAccelerator;
+
         [JsonIgnore]
         public Context cudaContext;
         [JsonIgnore]
         public Accelerator cudaAccelerator;
+
+        private static void EnsureGpuInitialized()
+        {
+            if (_sharedAccelerator != null) return;
+            lock (_gpuInitLock)
+            {
+                if (_sharedContext != null) return;
+                _sharedContext = Context.Create(builder => builder.Default().EnableAlgorithms());
+                _sharedAccelerator = _sharedContext.CreateCudaAccelerator(0);
+            }
+        }
 
         public GpuBrain(Context cudaContext, Accelerator cudaAccelerator, ThreeDArray weights, TwoDArray biases, int generation = 0, float bestScore = 0) : base(weights, biases, generation, bestScore)
         {
@@ -27,22 +43,23 @@ namespace SharpKnowledge.Knowledge
 
         public GpuBrain(ThreeDArray weights, TwoDArray biases, int generation = 0, float bestScore = 0) : base(weights, biases, generation, bestScore)
         {
+            EnsureGpuInitialized();
+            this.cudaContext = _sharedContext!;
+            this.cudaAccelerator = _sharedAccelerator!;
         }
 
         protected override void CalculateColumn(int mainNodeCol)
         {
-            //base.CalculateColumn(mainNodeCol);
             int mainNodeTotalRows = this.nodes.GetRows(mainNodeCol);
 
             var colBiases = this.biases.Array[mainNodeCol];
             var colWeights = this.weights.Array[mainNodeCol - 1];
             var prevColNodes = this.nodes.Array[mainNodeCol - 1];
 
-            MemoryBuffer1D<float, Stride1D.Dense> biasesOnDevice = cudaAccelerator.Allocate1D(colBiases);
-            MemoryBuffer2D<float, Stride2D.DenseX> weightsOnDevice = cudaAccelerator.Allocate2DDenseX(colWeights);
-            MemoryBuffer1D<float, Stride1D.Dense> prevNodes = cudaAccelerator.Allocate1D(prevColNodes);
-
-            MemoryBuffer1D<float, Stride1D.Dense> deviceOutput = cudaAccelerator.Allocate1D<float>(mainNodeTotalRows);
+            using var biasesOnDevice = cudaAccelerator.Allocate1D(colBiases);
+            using var weightsOnDevice = cudaAccelerator.Allocate2DDenseX(colWeights);
+            using var prevNodes = cudaAccelerator.Allocate1D(prevColNodes);
+            using var deviceOutput = cudaAccelerator.Allocate1D<float>(mainNodeTotalRows);
 
             int prevCol = mainNodeCol - 1;
             int prevTotalRows = this.biases.GetRows(prevCol);
@@ -55,8 +72,6 @@ namespace SharpKnowledge.Knowledge
 
             loadedCalcKernel(mainNodeTotalRows, mainNodeCol, prevTotalRows, prevNodes, biasesOnDevice, weightsOnDevice, deviceOutput);
 
-            // wait for the accelerator to be finished with whatever it's doing
-            // in this case it just waits for the kernel to finish.
             cudaAccelerator.Synchronize();
 
             float[] deviceReadOutputs = deviceOutput.GetAsArray1D();
@@ -71,25 +86,20 @@ namespace SharpKnowledge.Knowledge
         {
             int prevCol = mainNodeCol - 1;
 
-            //float bias = this.biases.Get(mainNodeRow, mainNodeCol);
             float bias = biases[mainNodeRow];
             float calculatedValue = bias;
 
             for (int calcRow = 0; calcRow < prevTotalRows; calcRow++)
             {
-                //float prevNodeValue = this.nodes.Get(calcRow, prevCol);
                 float prevNodeValue = prevNodes[calcRow];
-
-                //float weight = this.weights.Get(calcRow, prevCol, mainNodeRow);
                 float weight = weights[calcRow, mainNodeRow];
 
                 calculatedValue += prevNodeValue * weight;
             }
 
-            //float sigmoidedValue = QuickMaths.Sigmoid(calculatedValue);
-
-            //this.nodes.Set(mainNodeRow, mainNodeCol, calculatedValue);
-            output[mainNodeRow] = calculatedValue;
+            // Sigmoid activation: k = exp(x), sigmoid = k / (1 + k)
+            float k = MathF.Exp(calculatedValue);
+            output[mainNodeRow] = k / (1.0f + k);
         }
 
         public override GpuBrain Clone()

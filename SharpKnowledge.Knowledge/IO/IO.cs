@@ -41,6 +41,10 @@ namespace SharpKnowledge.Knowledge.IO
         public (BrainModel brainModel, CpuBrain cpuBrain) LoadCpuBrain(Guid brainId)
         {
             var brainModel = _brainModelsService.GetById(brainId);
+            if (brainModel == null)
+            {
+                return (null, null);
+            }
             var cpuBrain = new CpuBrain(new Utility.ThreeDArray(brainModel.GetWeightsArray()), new Utility.TwoDArray(brainModel.GetBiasesArray()), brainModel.Generation, brainModel.BestScore);
             return (brainModel, cpuBrain);
         }
@@ -58,6 +62,10 @@ namespace SharpKnowledge.Knowledge.IO
         public (BrainModel brainModel, GpuBrain gpuBrain) LoadGpuBrain(Guid brainId)
         {
             var brainModel = _brainModelsService.GetById(brainId);
+            if (brainModel == null)
+            {
+                return (null, null);
+            }
             var gpuBrain = new GpuBrain(new Utility.ThreeDArray(brainModel.GetWeightsArray()), new Utility.TwoDArray(brainModel.GetBiasesArray()), brainModel.Generation, brainModel.BestScore);
             return (brainModel, gpuBrain);
         }
@@ -65,7 +73,7 @@ namespace SharpKnowledge.Knowledge.IO
         public (BrainModel brainModel, GpuBrain gpuBrain) LoadLatestGpuBrain(string game)
         {
             var brainId = _brainModelsService.GetBestScore(game);
-            if (brainId != Guid.Empty)
+            if (brainId == Guid.Empty)
             {
                 return (null, null);
             }

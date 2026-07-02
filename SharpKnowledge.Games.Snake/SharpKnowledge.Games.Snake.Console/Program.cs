@@ -29,6 +29,12 @@ class Program
         //var latest = io.GetLatestId("CPU_Snake_400_100_50_4");
         var latestModel = io.LoadCpuBrain(latest);
 
+        if (latestModel.cpuBrain == null)
+        {
+            System.Console.WriteLine("No saved brain found for CPU_Snake_400_400_300_4");
+            return;
+        }
+
         GameLoop(latestModel.cpuBrain);
     }
 

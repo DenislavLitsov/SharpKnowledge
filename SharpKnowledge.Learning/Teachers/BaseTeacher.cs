@@ -46,6 +46,6 @@ namespace SharpKnowledge.Learning.Teachers
             return student.Brain;
         }
 
-        protected abstract BaseGame InitializeNewGame();
+        public abstract BaseGame InitializeNewGame();
     }
 }

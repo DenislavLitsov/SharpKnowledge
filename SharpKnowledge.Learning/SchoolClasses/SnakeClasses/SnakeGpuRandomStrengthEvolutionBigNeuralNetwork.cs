@@ -1,9 +1,10 @@
-﻿using SharpKnowledge.Data.Models;
+using SharpKnowledge.Common;
+using SharpKnowledge.Common.RandomGenerators;
+using SharpKnowledge.Data.Models;
 using SharpKnowledge.Knowledge;
 using SharpKnowledge.Knowledge.Factories;
 using SharpKnowledge.Knowledge.IO;
 using SharpKnowledge.Learning.BrainManagers;
-using SharpKnowledge.Learning.SchoolClasses.SnakeClasses;
 using SharpKnowledge.Learning.Teachers;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpKnowledge.Learning.SchoolClasses.FlappyBirdClasses
+namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses;
+
+public class SnakeGpuRandomStrengthEvolutionBigNeuralNetwork: BaseSnakeClass<GpuBrain>
 {
-    public class FlappyBirdCPURandomStrenthEvolution : BaseFlappyBirdClass<CpuBrain>
-    {
         Random Random = new Random();
 
-        public FlappyBirdCPURandomStrenthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads, int consumerCount = 32) : base("CPU_FlappyBird_7_70_70_25_1", teacher, brainEvolutioner, null, learningThreads, consumerCount)
+        public SnakeGpuRandomStrengthEvolutionBigNeuralNetwork(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads, int consumerCount = 50) : base("GPU_Snake_ 400, 4000, 4000, 200, 4", teacher, brainEvolutioner, null, learningThreads, consumerCount)
         {
-            System.Console.WriteLine($"Create {nameof(FlappyBirdCPURandomStrenthEvolution)} with {learningThreads} learning threads");
+            System.Console.WriteLine($"Create {nameof(SnakeCpuRandomStrengthEvolutionBigNeuralNetwork)} with {learningThreads} learning threads");
         }
 
         protected override (float mutationChance, float mutationStrength) GetMutationStrength()
@@ -65,13 +66,13 @@ namespace SharpKnowledge.Learning.SchoolClasses.FlappyBirdClasses
 
         protected override void LoadInitialBrain()
         {
-            var latestModel = new IO().LoadLatestCpuBrain(this.className);
-            CpuBrain mainBrain;
-            if (latestModel.cpuBrain == null)
+            var latestModel = new IO().LoadLatestGpuBrain(this.className);
+            GpuBrain mainBrain;
+            if (latestModel.gpuBrain == null)
             {
-                int[] columnsWithRows = { 7, 70, 70, 25, 1 };
+                int[] columnsWithRows = { 400, 4000, 4000, 200, 4 };
                 var factory = new NullBrainFactory(columnsWithRows);
-                mainBrain = factory.GetCpuBrain();
+                mainBrain = factory.GetGpuBrain();
                 mainBrain.BestScore = -20;
                 Console.WriteLine("Created random initial brain");
 
@@ -82,10 +83,9 @@ namespace SharpKnowledge.Learning.SchoolClasses.FlappyBirdClasses
             else
             {
                 this.loadedModel = latestModel.brainModel;
-                this.initialBrain = latestModel.cpuBrain;
+                this.initialBrain = latestModel.gpuBrain;
 
                 Console.WriteLine($"Loaded generation: {latestModel.brainModel.Generation}, with description: {latestModel.brainModel.Description}");
             }
         }
-    }
 }

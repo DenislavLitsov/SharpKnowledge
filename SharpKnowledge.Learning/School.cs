@@ -22,15 +22,20 @@ namespace SharpKnowledge.Learning
 
         public void StartLearning()
         {
-            List<BaseSchoolClass<CpuBrain>> cpuClasses = new List<BaseSchoolClass<CpuBrain>>();
+            List<ISchoolClass> cpuClasses = new List<ISchoolClass>();
             var snakeClass = new SnakeCpuRandomStrengthEvolution(
                 new SnakeTeacher(new RandomGeneratorFactory(true, 10000)), 
                 brainEvolutioner, 
                 EnvironmentManager.GetAggresiveCPUSnakeLearningTotalThreads());
 
             var snakeClass2 = new SnakeCpuRandomStrengthEvolutionBigNeuralNetwork(
-                new SnakeTeacher(new RandomGeneratorFactory(true, 10000)), 
-                brainEvolutioner, 
+                new SnakeTeacher(new RandomGeneratorFactory(true, 10000)),
+                brainEvolutioner,
+                EnvironmentManager.GetAggresiveCPUSnakeBigLearningTotalThreads());
+
+            var GPUSnakeClass = new SnakeGpuRandomStrengthEvolutionBigNeuralNetwork(
+                new SnakeTeacher(new RandomGeneratorFactory(true, 10000)),
+                brainEvolutioner,
                 EnvironmentManager.GetAggresiveCPUSnakeBigLearningTotalThreads());
 
 
@@ -40,7 +45,8 @@ namespace SharpKnowledge.Learning
                 EnvironmentManager.GetAggresiveCPUFlappyBirdBigLearningTotalThreads());
 
             //cpuClasses.Add(snakeClass);
-            cpuClasses.Add(snakeClass2);
+            //cpuClasses.Add(snakeClass2);
+            cpuClasses.Add(GPUSnakeClass);
             //cpuClasses.Add(flappyBird1);
 
             List<Thread> threads = new List<Thread>();

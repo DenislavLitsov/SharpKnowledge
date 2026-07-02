@@ -27,7 +27,7 @@ namespace SharpKnowledge.Learning
             return thread;
         }
 
-        protected void PlayUntilGameOver()
+        public void PlayUntilGameOver()
         {
             this.baseGame.Initialize();
             GameResult isGameOver = GameResult.Continue;

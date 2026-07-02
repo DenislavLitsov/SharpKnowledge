@@ -13,7 +13,7 @@ namespace SharpKnowledge.Learning.Teachers
             this.generatorFactory = generatorFactory;
         }
 
-        protected override BaseGame InitializeNewGame()
+        public override BaseGame InitializeNewGame()
         {
             return new SnakeGame(20, 20, this.generatorFactory.GetRandomGenerator());
         }

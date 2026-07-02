@@ -18,7 +18,7 @@ public class SnakeCpuRandomStrengthEvolutionBigNeuralNetwork: BaseSnakeClass<Cpu
 {
         Random Random = new Random();
 
-        public SnakeCpuRandomStrengthEvolutionBigNeuralNetwork(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_Snake_400_400_300_4", teacher, brainEvolutioner, null, learningThreads)
+        public SnakeCpuRandomStrengthEvolutionBigNeuralNetwork(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads, int consumerCount = 32) : base("CPU_Snake_ 400, 4000, 4000, 200, 4", teacher, brainEvolutioner, null, learningThreads, consumerCount)
         {
             System.Console.WriteLine($"Create {nameof(SnakeCpuRandomStrengthEvolutionBigNeuralNetwork)} with {learningThreads} learning threads");
         }

@@ -18,7 +18,7 @@ namespace SharpKnowledge.Learning.SchoolClasses.SnakeClasses
     {
         Random Random = new Random();
 
-        public SnakeCpuRandomStrengthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads) : base("CPU_Snake_400_100_50_4", teacher, brainEvolutioner, null, learningThreads)
+        public SnakeCpuRandomStrengthEvolution(BaseTeacher teacher, BrainEvolutioner brainEvolutioner, int learningThreads, int consumerCount = 32) : base("CPU_Snake_400_100_50_4", teacher, brainEvolutioner, null, learningThreads, consumerCount)
         {
             System.Console.WriteLine($"Create {nameof(SnakeCpuRandomStrengthEvolution)} with {learningThreads} learning threads");
         }
